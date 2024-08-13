@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script/>
+        <description>Help and Support UI page for Turbonomic Actions application.</description>
+        <direct>false</direct>
+        <endpoint>x_turbo_turbonomic_Turbonomic_Actions_Help.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false"
+		 xmlns:j="jelly:core"
+		 xmlns:g="glide"
+		 xmlns:j2="null"
+		 xmlns:g2="null">
+    <div style="padding: 8px; font-family: 'Open Sans', sans-serif;">
+		<img alt="image" src="https://d7umqicpi7263.cloudfront.net/img/product/74c42605-f8ac-45eb-a6a0-949f41242e23/708ed306-fb67-4451-9431-1149c9eae007.png" width="150" height="100" style="float: left; margin-right: 20px; margin-bottom: 8px"></img>
+        <h2 style="margin-top: 100; line-height: 40px">
+            Help and Support
+        </h2>
+        <br/>
+        <div>
+            <table class="table-sm table-responsive borderless">
+                <tr>
+                    <td>
+                        <h3>Turbonomic Actions Documentation:</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>
+                            <a rel="noopener noreferrer nofollow" href="https://www.ibm.com/docs/en/tafs/1.1" target="_blank">https://www.ibm.com/docs/en/tafs</a>
+                        </h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h3>Contact Information:</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>
+                            <a rel="noopener noreferrer nofollow" href="https://www.ibm.com/mysupport" target="_blank">https://support.ibm.com</a>
+                        </h4>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</j:jelly>]]></html>
+        <name>Turbonomic_Actions_Help</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-08-20 21:23:03</sys_created_on>
+        <sys_id>5952c24bdb5b3f000b25ebd8489619ca</sys_id>
+        <sys_mod_count>19</sys_mod_count>
+        <sys_name>Turbonomic_Actions_Help</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_ui_page_5952c24bdb5b3f000b25ebd8489619ca</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-05-04 17:17:54</sys_updated_on>
+    </sys_ui_page>
+</record_update>

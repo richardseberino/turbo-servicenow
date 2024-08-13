@@ -1,0 +1,14 @@
+
+#
+#  CODEOWNERS specifies the users/groups that are responsible for certain files and directories.
+#
+#    Documentation: https://docs.gitlab.com/ee/user/project/code_owners.html
+#
+#    Our rules:
+#        1. review groups are alway listed first
+#        2. all other groups listed after
+#        3. individuals listed last (but this should be avoided if at all possible)
+#
+# (note: build-related at the bottom of the file so they that precedence)
+
+* @review/orchestrator

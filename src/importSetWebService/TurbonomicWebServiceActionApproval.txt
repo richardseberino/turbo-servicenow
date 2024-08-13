@@ -1,0 +1,153 @@
+Label: Turbonomic Web Service Action Approval
+Name: x_turbo_turbonomic_ws_action_approval
+Application: Turbonomic Actions
+Copy fields from target table: unchecked
+Create transform map: checked
+Target table: Turbonomic Action Approval
+
+Label:  Update Sys Id
+Name:   u_update_sys_id
+Length: GUID (32)
+
+Label:  Action DTO
+Name:   u_action_dto
+Length: Huge (65000)
+
+Label:  Category
+Name:   u_category
+Length: Medium (100)
+
+Label:  Change Request
+Name:   u_change_request
+Length: GUID (32)
+
+Label:  Metric
+Name:   u_metric
+Length: Medium (100)
+
+Label:  Count
+Name:   u_count
+Length: Default (40)
+
+Label:  Description
+Name:   u_description
+Length: Large (1000)
+
+Label:  Destination Entity
+Name:   u_destination_entity
+Length: GUID (32)
+
+Label:  From
+Name:   u_from
+Length: Large (1000)
+
+Label:  Most Recent Execution Description
+Name:   u_most_recent__on_description (for some reason ServiceNow always generates this)
+Length: Large (1000)
+
+Label:  Name
+Name:   u_name
+Length: Large (1000)
+
+Label:  OID
+Name:   u_oid
+Length: Medium (100)
+
+Label:  Risk
+Name:   u_risk
+Length: Medium (100)
+
+Label:  Savings
+Name:   u_savings
+Length: Default (40)
+
+Label:  Source Entity
+Name:   u_source_entity
+Length: GUID (32)
+
+Label:  State
+Name:   u_state
+Length: GUID (32)
+
+Label:  Target Entity
+Name:   u_target_entity
+Length: GUID (32)
+
+Label:  To
+Name:   u_to
+Length: Large (1000)
+
+Label:  Turbonomic Timestamp
+Name:   u_turbonomic_timestamp
+Length: Default (40)
+
+Label:  Type
+Name:   u_type
+Length: GUID (32)
+
+Label:  Updated by
+Name:   u_updated_by
+Length: Default (40)
+
+
+
+
+
+Table Transform Map
+Name: Turbonomic Web Service Action Approval
+Source table: Turbonomic Web Service Action Approval
+Active: checked
+Run business rules: checked
+Enforce mandatory fields: No
+Copy empty fields: unchecked
+Application: Turbonomic Actions
+Created: <blank>
+Target Table: Turbonomic Action Approval
+Order: 100
+Run script: unchecked
+
+Auto Map Matching Fields
+Source field                  Target field                      Coalesce
+u_count                       count                             false
+u_risk                        risk                              false
+u_to                          to                                false
+u_action_dto                  action_dto                        false
+u_name                        name                              false
+u_type                        type_id                           false
+u_category                    category                          false
+u_most_recent__on_description most_recent_execution_description false
+u_metric                      commodity_name                    false
+u_change_request              change_request_id                 false
+u_savings                     savings                           false
+u_turbonomic_timestamp        turbonomic_timestamp              false
+u_target_entity               target_entity_id                  false
+u_destination_entity          destination_entity_id             false
+u_description                 description                       false
+u_from                        from                              false
+u_oid                         oid                               false
+u_source_entity               source_entity_id                  false
+u_state                       state_id                          false
+
+New Field Map
+    This one needs to be added manually. The automap feature doesn't
+    populate this.
+Source field                  Target field                      Coalesce
+u_updated_by                  sys_updated_by                    false
+
+
+New Field Map
+    This one needs to be added manually because it requires a script.
+Use source script: checked
+Target field: Sys ID
+Coalesce: checked
+Coalesce empty fields: checked
+Source script:
+answer = (function transformEntry(source) {
+    var fieldMapUtil = new TurbonomicFieldMapUtil();
+    return fieldMapUtil.findExistingSysIdFromFieldMap('x_turbo_turbonomic_turbonomic_action_approval', source);
+})(source);
+
+Appears as the below in the field maps table of the transformation map
+Source field                  Target field                      Coalesce   Coalesce empty fields
+[Script]                      sys_id                            true       true
+

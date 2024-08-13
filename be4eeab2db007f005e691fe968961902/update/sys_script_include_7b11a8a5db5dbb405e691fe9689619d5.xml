@@ -1,0 +1,1561 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_turbo_turbonomic.TurbonomicActionApprovalManager</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>TurbonomicActionApprovalManager</name>
+        <script><![CDATA[var TurbonomicActionApprovalManager =  (function () {
+
+    TurbonomicActionApprovalManager.prototype.type = 'TurbonomicActionApprovalManager';
+
+    function TurbonomicActionApprovalManager() {
+        this._turbonomicActionItemState = new TurbonomicActionItemState();
+        this._actionApprovalState = new TurbonomicActionApprovalState();
+        this._changeRequestStates = new TurbonomicChangeRequestState();
+        this._changeRequestDAO = new TurbonomicChangeRequestDAO();
+        this._actionDAO = new TurbonomicActionDAO();
+        this._tableNames = new TurbonomicTableNames();
+    }
+
+    /**
+     * Update an existing Action Approval entry, based on the input values.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param sourceEntityId The ID of the source Turbonomic entity, for the action approval that will be updated.
+     * @param destinationEntityId The ID of the destination Turbonomic entity, for the action approval that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     * @param approvalCreationAllowed Flag set to true if new action approval can be added, false otherwise.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalEntry = function(actionItem, actionApproval, sourceEntityId, destinationEntityId, targetEntityId, actionDto, failed, succeeded, approvalCreationAllowed) {
+        var actionItemState = actionItem.state.toUpperCase();
+
+        switch (actionItemState) {
+            case this._turbonomicActionItemState.PENDING_ACCEPT :
+                this.updateActionApprovalForPendingAcceptCase(actionItem, actionApproval, sourceEntityId, destinationEntityId, targetEntityId, actionDto, failed, succeeded, approvalCreationAllowed);
+                break;
+            case this._turbonomicActionItemState.ACCEPTED :
+                this.updateActionApprovalForAcceptedCase(actionItem, actionApproval, targetEntityId, failed, succeeded);
+                break;
+            case this._turbonomicActionItemState.CLEARED :
+                this.updateActionApprovalForClearedCase(actionItem, actionApproval, targetEntityId, failed, succeeded);
+                break;
+            case this._turbonomicActionItemState.REJECTED :
+                this.updateActionApprovalForRejectedCase(actionItem, actionApproval, targetEntityId, failed, succeeded);
+                break;
+            case this._turbonomicActionItemState.IN_PROGRESS :
+                this.updateActionApprovalForInProgressCase(actionItem, actionApproval, targetEntityId, failed, succeeded);
+                break;
+            case this._turbonomicActionItemState.SUCCEEDED :
+                this.updateActionApprovalForSucceededCase(actionItem, actionApproval, targetEntityId, failed, succeeded);
+                break;
+            case this._turbonomicActionItemState.FAILED :
+                this.updateActionApprovalForFailedCase(actionItem, actionApproval, targetEntityId, failed, succeeded);
+                break;
+            case this._turbonomicActionItemState.QUEUED :
+                this.updateActionApprovalForQueuedCase(actionItem, actionApproval, targetEntityId, failed, succeeded);
+                break;
+            case this._turbonomicActionItemState.DISABLED :
+            case this._turbonomicActionItemState.RECOMMENDED :
+                this.updateActionApprovalForDisabledCase(actionItem, actionApproval, targetEntityId, failed);
+                break;
+            default :
+                gs.warn('TurbonomicActionApprovalManager.updateActionApprovalEntry() - ' +
+                        'Unsupported action item state: ' + actionItem.state);
+                failed.push({'oid' : actionItem.oid,
+                             'errorMsg' : 'Unsupported action state: ' + actionItem.state + ' while processing action ' + actionItem.oid
+                });
+        }
+    };
+
+    /**
+     * Update an existing Action Approval entry, for a Turbonomic action on PENDING_ACCEPT state.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param sourceEntityId The ID of the source Turbonomic entity, for the action approval that will be updated.
+     * @param destinationEntityId The ID of the destination Turbonomic entity, for the action approval that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param actionDto The input Action DTO in jSON format.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     * @param approvalCreationAllowed Flag set to true if new action approval can be added, false otherwise.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalForPendingAcceptCase = function(actionItem, actionApproval, sourceEntityId, destinationEntityId, targetEntityId, actionDto, failed, succeeded, approvalCreationAllowed) {
+        var actionUtils = new x_turbo_turbonomic.TurbonomicActionUtils();
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+        var changeRequest = new x_turbo_turbonomic.TurbonomicChangeRequest();
+        var counter = actionApproval.getCount() + 1;
+
+        switch (actionApprovalState) {
+            case this._actionApprovalState.PENDING_APPROVAL :
+                gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                         'Increasing the counter for pending action approval with OID: ' + actionItem.oid);
+
+                changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                if (this._actionDAO.updateActionApprovalRecord(actionItem, 'u_count', counter)) {
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : actionApproval.getChangeRequestId(),
+                                    'changeRequestNumber' : changeRequest.getNumber(),
+                                    'state' : this._actionApprovalState.PENDING_APPROVAL,
+                                    'isValid' : actionApproval.getValid()
+                    });
+
+                    gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                             'Successfully updated the action approval counter value; counter = ' + counter);
+				} else {
+                    failed.push({'oid' : actionItem.oid,
+                                 'errorMsg' : 'Cannot update the counter for action approval with OID: ' + actionItem.oid
+                    });
+                }
+
+                break;
+            case this._actionApprovalState.WAITING_FOR_CR_SCHEDULE :
+                this.updateActionApprovalWaitingForChangeRequestSchedule(actionItem, actionApproval,
+                        'TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ', failed, succeeded);
+                break;
+            case this._actionApprovalState.APPROVED :
+                gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                         'Increasing the counter for action approval on APPROVED state; Action OID = ' + actionItem.oid);
+
+                var isValid = 'false';
+                if (this._actionDAO.updateActionApprovalRecord(actionItem, 'u_count', counter)) {
+                    isValid = 'true';
+                    gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                             'Successfully updated the action approval counter value; counter = ' + counter);
+				} else {
+                    gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                            'Failed to update the action approval counter value; counter = ' + counter);
+                }
+
+                changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : actionApproval.getChangeRequestId(),
+                                'changeRequestNumber' : changeRequest.getNumber(),
+                                'state' : this._actionApprovalState.APPROVED,
+                                'isValid' : isValid
+                });
+
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                        'The change request has been approved for the Turbonomic action with OID: ' + actionItem.oid);
+
+                break;
+            case this._actionApprovalState.REJECTED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                        'The change request has been rejected for the Turbonomic action with OID: ' + actionItem.oid);
+
+                if (approvalCreationAllowed && this._actionDAO.allowApprovalsForRejectedRequests()) {
+                    // Add new action approval and matching change request
+                    changeRequest = this.addActionApproval(actionItem, sourceEntityId, destinationEntityId, targetEntityId, actionDto);
+
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : changeRequest.getId(),
+                                    'changeRequestNumber' : changeRequest.getNumber(),
+                                    'state' : this._actionApprovalState.PENDING_APPROVAL,
+                                    'isValid' : actionApproval.getValid()
+                    });
+                } else {
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                            'New action approvals are not allowed for the rejected action with OID: ' + actionItem.oid);
+
+                    changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : actionApproval.getChangeRequestId(),
+                                    'changeRequestNumber' : changeRequest.getNumber(),
+                                    'state' : this._actionApprovalState.REJECTED,
+                                    'isValid' : 'false'
+                    });
+                }
+                break;
+            case this._actionApprovalState.WAITING_FOR_EXEC :
+            case this._actionApprovalState.IN_PROGRESS :
+                gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                         'The state of the approved action with OID: ' + actionItem.oid + ' is: ' + actionApprovalState);
+
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : changeRequest.getId(),
+                                'changeRequestNumber' : changeRequest.getNumber(),
+                                'state' : actionApprovalState,
+                                'isValid' : 'true'
+                });
+                break;
+            case this._actionApprovalState.FAILED :
+                if (actionUtils.isActionExecutionRecoveryTimeOn(actionItem.oid)) {
+                    gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                             'Skip adding new Action Approval and CR for previously failed Turbonomic action with OID: ' + actionItem.oid);
+                } else if (approvalCreationAllowed) {
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                            'Adding new action approval for Turbonomic action on PENDING_ACCEPT state. Current Action Approval is FAILED');
+
+                    // Add new action approval and matching change request
+                    changeRequest = this.addActionApproval(actionItem, sourceEntityId, destinationEntityId, targetEntityId, actionDto);
+
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : changeRequest.getId(),
+                                    'changeRequestNumber' : changeRequest.getNumber(),
+                                    'state' : this._actionApprovalState.PENDING_APPROVAL,
+                                    'isValid' : 'true'
+                    });
+                } else {
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                            'Action Approval state is FAILED but a new action approval will not be added by the update operation');
+                }
+                break;
+            case this._actionApprovalState.MISSED :
+            case this._actionApprovalState.SUCCEEDED :
+                if (approvalCreationAllowed) {
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                            'Adding new action approval for Turbonomic action on PENDING_ACCEPT state. Current Action Approval state = ' + actionApprovalState);
+
+                    // Add new action approval and matching change request
+                    changeRequest = this.addActionApproval(actionItem, sourceEntityId, destinationEntityId, targetEntityId, actionDto);
+
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : changeRequest.getId(),
+                                    'changeRequestNumber' : changeRequest.getNumber(),
+                                    'state' : this._actionApprovalState.PENDING_APPROVAL,
+                                    'isValid' : 'true'
+                    });
+                } else {
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                            'Action Approval state is MISSED or SUCCEEDED but a new action approval will not be added by the update operation');
+                }
+                break;
+            case this._actionApprovalState.REPLACED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                        'The Action Approval state is set to REPLACED, for the pending Turbonomic action with OID: ' + actionItem.oid);
+                break;
+            default :
+                gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForPendingAcceptCase() - ' +
+                        'Unsupported action approval state: ' + actionApprovalState);
+        }
+    };
+
+    /**
+     * Add a new Action Approval entry, for a corresponding Turbonomic action.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param sourceEntityId The ID of the source Turbonomic entity, for the action approval that will be created.
+     * @param destinationEntityId The ID of the destination Turbonomic entity, for the action approval that will be created.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be created.
+     *
+     * @return The TurbonomicChangeRequest with details about the change request, generated for the newly created Action Approval entry.
+     */
+    TurbonomicActionApprovalManager.prototype.addActionApproval = function(actionItem, sourceEntityId, destinationEntityId, targetEntityId, actionDto) {
+        var configItemId = '';
+
+        // Use the target entity to find the ServiceNow configuration item
+        var targetEntity = this._actionDAO.getTurbonomicEntityById(targetEntityId);
+        if (targetEntity) {
+            var entityMatcher = new x_turbo_turbonomic.TurbonomicEntityMatcher();
+            var configItem = entityMatcher.findConfigurationItem(targetEntity);
+
+            if (configItem != null) {
+                gs.debug('TurbonomicActionApprovalManager.addActionApproval() - The matching configuration item GUID is: ' + configItem.sys_id);
+                configItemId = configItem.sys_id;
+            }
+        }
+
+        var actionDetails = '';
+        var changeRequest = new x_turbo_turbonomic.TurbonomicChangeRequest();
+
+        gs.debug('TurbonomicActionApprovalManager.addActionApproval() - Combine With Actions value for action with OID = ' + actionItem.oid + ' is: ' + actionItem.combineWith);
+        var combinedCRFound = false;
+        if (actionItem.combineWith && this._actionDAO.allowCombineActions()) {
+            gs.debug('TurbonomicActionApprovalManager.addActionApproval() - Combine With Actions allowed and valid combined actions OIDs have been found for action item with OID: ' + 
+                actionItem.oid);
+
+            var actionOIDs = actionItem.combineWith.split(',');
+            for (var i = 0; i < actionOIDs.length; i++) {
+                actionDetails = '';
+                var actionApproval = this._actionDAO.getLastModifiedActionApproval(actionOIDs[i], true);
+                if (actionApproval && actionApproval.getChangeRequestId()) {
+                    var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId());
+                    gs.debug('TurbonomicActionApprovalManager.addActionApproval() - Found valid combined action approval: OID = ' +
+                        actionApproval.getActionOID() + ', stateID = ' + actionApproval.getStateId() + ', changeRequestID = ' + actionApproval.getChangeRequestId());
+
+                    var combinedChangeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                    if (actionApprovalState == this._actionApprovalState.PENDING_APPROVAL && combinedChangeRequest.getState() == this._changeRequestStates.NEW) {
+                        gs.debug('TurbonomicActionApprovalManager.addActionApproval() - Found combined change request: CR State = ' + combinedChangeRequest.getState()  + ', CR Number = ' + combinedChangeRequest.getNumber());
+
+                        // Update the description and short description of the combined CR
+                        var description = combinedChangeRequest.getDescription() + ', ' + actionItem.description;
+                        gs.debug('TurbonomicActionApprovalManager.addActionApproval() - Updated Combined CR description is: ' + description);
+
+                        var shortDescription = combinedChangeRequest.getShortDescription() + ', ' + actionItem.description;
+                        actionDetails = this._actionDAO.getActionDetailsURL(actionItem.oid, actionItem.description);
+
+                        this._actionDAO.insertIntoImportSet(this._tableNames.CHANGE_REQUEST_IMPORT_SET,
+                            {
+                                u_update_sys_id: actionApproval.getChangeRequestId(),
+                                u_short_description: shortDescription,
+                                u_description: description,
+                                u_work_notes: actionDetails
+                            },
+                            'TurbonomicActionApprovalManager.addActionApproval() - Successfully updated the description of change_request with ID: ' + actionApproval.getChangeRequestId());
+
+                        changeRequest = combinedChangeRequest;
+                        combinedCRFound = true;
+
+                        break;
+                    }
+                } else {
+                    gs.debug('TurbonomicActionApprovalManager.addActionApproval() - Cannot find valid combined action approval entry with OID = ' + actionOIDs[i]);
+                }
+            }
+        } else {
+            gs.debug('TurbonomicActionApprovalManager.addActionApproval() - The list of combined action approvals is empty or combining Turbonomic actions is not allowed.');
+        }
+
+        if (!combinedCRFound) {
+            gs.debug('TurbonomicActionApprovalManager.addActionApproval() - No combined actions were found for Turbonomic action with OID: ' + actionItem.oid);
+            actionDetails = this._actionDAO.getActionDetailsURL(actionItem.oid, actionItem.description);
+
+            // Create the corresponding change request for the action approval
+            changeRequest = this._actionDAO.createChangeRequest(actionItem.oid, configItemId, actionItem.description, actionItem.description, actionDetails);
+        }
+
+        // Create a new action approval entry
+        this._actionDAO.createActionApproval(actionItem.oid,
+                                 actionItem.name,
+                                 actionItem.description,
+                                 actionItem.category,
+                                 actionItem.commodityName,
+                                 actionItem.from,
+                                 actionItem.to,
+                                 actionItem.risk,
+                                 actionItem.savings,
+                                 1,
+                                 actionItem.changedBy,
+                                 sourceEntityId,
+                                 targetEntityId,
+                                 destinationEntityId,
+                                 changeRequest.getId(),
+                                 this._actionDAO.getActionStateId(this._actionApprovalState.PENDING_APPROVAL),
+                                 this._actionDAO.getActionTypeId(actionItem.type),
+                                 actionItem.type,
+                                 actionItem.timestampMsec,
+                                 actionItem.combineWith,
+                                 '',
+                                 '',
+                                 actionDto
+                                );
+
+        return changeRequest;
+    };
+
+    /**
+     * Replace an existing Action Approval with a new one, based on the input Turbonomic action item.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be replaced.
+     * @param sourceEntityId The ID of the source Turbonomic entity, for the action approval that will be replaced.
+     * @param destinationEntityId The ID of the destination Turbonomic entity, for the action approval that will be replaced.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be replaced.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     *
+     * @return The TurbonomicChangeRequest with details about the change request, retrieved from the replaced Action Approval entry.
+     */
+    TurbonomicActionApprovalManager.prototype.replaceActionApprovalEntry = function(actionItem, actionApproval, sourceEntityId, destinationEntityId, targetEntityId, failed, succeeded) {
+        var actionItemState = actionItem.state.toUpperCase();
+        var replacedChangeRequest = new x_turbo_turbonomic.TurbonomicChangeRequest();
+        var actionUtils = new x_turbo_turbonomic.TurbonomicActionUtils();
+
+        gs.debug('TurbonomicActionApprovalManager.replaceActionApprovalEntry() - Replacing action approval with OID = ' + actionApproval.getActionOID() + ' with ' + 
+                ' Turbonomic action with OID =' + actionItem.oid + ' Turbo Action From = ' + actionItem.from + 'Turbo Action To = ' + actionItem.to);
+
+        replacedChangeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+
+        gs.debug('TurbonomicActionApprovalManager.replaceActionApprovalEntry() - Replaced Approval CR Number = ' + replacedChangeRequest.getNumber() + ' ID = ' + 
+                replacedChangeRequest.getId());
+
+        var existingApproval = this._actionDAO.getLastModifiedActionApproval(actionItem.oid, true);
+        if (existingApproval && this._actionDAO.getActionStateById(existingApproval.getStateId()).toUpperCase() == this._actionApprovalState.PENDING_APPROVAL) {
+            this.updateActionApprovalEntry(actionItem, actionApproval, sourceEntityId, destinationEntityId, targetEntityId, actionItem.actionDto, failed, succeeded);
+            gs.debug('TurbonomicRequestProcessor.replaceActionApprovalEntry() - Successfully updated existing Action Approval for action item with OID: ' + actionItem.oid);
+        } else {
+            // Create a replacement action approval record from the input action item and set its state to PENDING_APPROVAL.
+            // In addition, link the new action approval to the CR (if any) referred by the approval that will be replaced.
+            this._actionDAO.createActionApproval(actionItem.oid,
+                                 actionItem.name,
+                                 actionItem.description,
+                                 actionItem.category,
+                                 actionItem.commodityName,
+                                 actionItem.from,
+                                 actionItem.to,
+                                 actionItem.risk,
+                                 actionItem.savings,
+                                 1,
+                                 actionItem.changedBy,
+                                 sourceEntityId,
+                                 targetEntityId,
+                                 destinationEntityId,
+                                 replacedChangeRequest.getId(), // Use the change request ID of the replaced approval
+                                 this._actionDAO.getActionStateId(this._actionApprovalState.PENDING_APPROVAL),
+                                 this._actionDAO.getActionTypeId(actionItem.type),
+                                 actionItem.type,
+                                 actionItem.timestampMsec,
+                                 actionApproval.getCombineWith(), // Use combineWith value of the replaced approval
+                                 '', // Empty replaced by action approval ID
+                                 actionApproval.getActionOID(), // The OID of the action that is being replaced
+                                 actionItem.actionDto
+                                );
+
+            gs.debug('TurbonomicRequestProcessor.replaceActionApprovalEntry() - Successfully created new Action Approval for action item with OID: ' + actionItem.oid);
+        }
+
+        // Set the state of the approval that will be replaced to REPLACED
+        var actionStateId = this._actionDAO.getActionStateId(this._actionApprovalState.REPLACED);
+        this._actionDAO.insertIntoImportSet(this._tableNames.ACTION_APPROVAL_IMPORT_SET,
+            {
+                u_update_sys_id: actionApproval.getSysId(), // use the sysId to update
+                u_state: actionStateId,
+                u_replaced_by_action: actionItem.oid
+            },
+            'TurbonomicActionApprovalManager.replaceActionApprovalEntry() - Successfully set to REPLACED state the action approval with OID = ' +
+                actionApproval.getActionOID() + ' linked to change request: ' + replacedChangeRequest.getNumber());
+
+        var approvalsLinkedToRequest = new GlideRecordSecure('x_turbo_turbonomic_turbonomic_action_approval');
+        approvalsLinkedToRequest.addQuery('change_request_id', replacedChangeRequest.getId());
+        approvalsLinkedToRequest.addQuery('state_id', this._actionDAO.getActionStateId(this._actionApprovalState.PENDING_APPROVAL));
+        approvalsLinkedToRequest.query();
+
+        var crDescription = '';
+        while (approvalsLinkedToRequest.next()) {
+            var approvalDescription = approvalsLinkedToRequest.getValue('description');
+            if(approvalDescription && approvalDescription.length > 0) {
+                if (crDescription == '') {
+                    crDescription = approvalDescription;
+                } else {
+                    crDescription = crDescription + ',' + approvalDescription;	
+                }
+            }
+        }
+
+        var actionDetails = this._actionDAO.getActionDetailsURL(actionItem.oid, actionItem.description);
+
+        this._actionDAO.insertIntoImportSet(this._tableNames.CHANGE_REQUEST_IMPORT_SET,
+            {
+                u_update_sys_id: replacedChangeRequest.getId(),
+                u_short_description: crDescription,
+                u_description: crDescription,
+                u_work_notes: 'Action with OID = ' + actionApproval.getActionOID() + ' has been replaced by ' + 
+                'new action with OID = ' + actionItem.oid + '\n' + actionDetails
+            },
+            'TurbonomicActionApprovalManager.replaceActionApprovalEntry() - Successfully updated the description of change request with number: ' +
+                    replacedChangeRequest.getNumber());
+
+        return replacedChangeRequest;
+	};
+
+    /**
+     * Update an existing Action Approval entry, for a Turbonomic action on ACCEPTED state.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalForAcceptedCase = function(actionItem, actionApproval, targetEntityId, failed, succeeded) {
+        var actionUtils = new x_turbo_turbonomic.TurbonomicActionUtils();
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+        var changeRequest = new x_turbo_turbonomic.TurbonomicChangeRequest();
+        var counter = actionApproval.getCount() + 1;
+        var isValid = 'false';
+
+        switch (actionApprovalState) {
+            case this._actionApprovalState.APPROVED :
+                gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ' +
+                        'The Action Approval state is APPROVED, for the accepted Turbonomic action with OID: ' + actionItem.oid);
+
+                if (this._actionDAO.updateActionApprovalRecord(actionItem, 'u_count', counter)) {
+                    isValid = 'true';
+                    gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ' +
+                             'Successfully updated the action approval counter value; counter = ' + counter);
+				} else {
+                    isValid = 'false';
+                    gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ' +
+                            'Failed to update the action approval counter value; counter = ' + counter);
+                }
+
+                var stateId = this._actionDAO.getActionStateId(this._actionApprovalState.WAITING_FOR_EXEC);
+                if (this._actionDAO.updateLastModifiedActionApprovalField(actionItem.oid, 'u_state', stateId)) {
+                    changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : actionApproval.getChangeRequestId(),
+                                    'changeRequestNumber' : changeRequest.getNumber(),
+                                    'state' : this._actionApprovalState.WAITING_FOR_EXEC,
+                                    'isValid' : isValid
+                    });
+
+                    gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ' +
+                            'Successfully set the action approval state to WAITING_FOR_EXEC, for the accepted Turbonomic action with OID: ' + actionItem.oid);
+                } else {
+                    failed.push({'oid' : actionItem.oid,
+                                 'errorMsg' : 'Cannot set the state to WAITING_FOR_EXEC for action approval with OID: ' + actionItem.oid
+                    });
+                }
+
+                changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : actionApproval.getChangeRequestId(),
+                                'changeRequestNumber' : changeRequest.getNumber(),
+                                'state' : this._actionApprovalState.APPROVED,
+                                'isValid' : isValid
+                });
+
+                this.updateActionExecutionDescription(actionItem);
+
+                break;
+            case this._actionApprovalState.WAITING_FOR_CR_SCHEDULE :
+                this.updateActionApprovalWaitingForChangeRequestSchedule(actionItem, actionApproval,
+                        'TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ', failed, succeeded);
+                break;
+            case this._actionApprovalState.PENDING_APPROVAL :
+            case this._actionApprovalState.REJECTED :
+            case this._actionApprovalState.IN_PROGRESS :
+            case this._actionApprovalState.FAILED :
+            case this._actionApprovalState.SUCCEEDED :
+            case this._actionApprovalState.MISSED :
+            case this._actionApprovalState.REPLACED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ' +
+                        'Cannot update the Action Approval entry for Turbonomic action on ACCEPTED state. Action Approval state = ' + actionApprovalState);
+
+                var details = 'Unexpected state transition detected. Action Execution Description = '
+                        + actionItem.executionDescription + '; Turbonomic Action state = '
+                        + actionItem.state + '; Action Approval state = ' + actionApprovalState;
+
+                // Add audit record to mention the invalid Turbonomic action state
+                this._actionDAO.createOrUpdateActionRecord(actionItem.oid, details, '', targetEntityId,
+                        this._actionDAO.valueOrEmptyStr(actionItem.actionLifeCycleEvent));
+
+                failed.push({'oid' : actionItem.oid,
+                             'errorMsg' : 'Cannot update Action Approval entry for Turbonomic action with state: ' + actionItem.state
+                });
+                break;
+            case this._actionApprovalState.WAITING_FOR_EXEC :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ' +
+                        'The Action Approval state is already set to WAITING_FOR_EXEC, for the accepted Turbonomic action with OID: ' + actionItem.oid);
+
+                if (this._actionDAO.updateActionApprovalRecord(actionItem, 'u_count', counter)) {
+                    isValid = 'true';
+                    gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ' +
+                             'Successfully updated the action approval counter value; counter = ' + counter);
+				} else {
+                    isValid = 'false';
+                    gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ' +
+                            'Failed to update the action approval counter value; counter = ' + counter);
+                }
+
+                changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : actionApproval.getChangeRequestId(),
+                                'changeRequestNumber' : changeRequest.getNumber(),
+                                'state' : this._actionApprovalState.WAITING_FOR_EXEC,
+                                'isValid' : isValid
+                });
+                break;
+            default :
+                gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForAcceptedCase() - ' +
+                        'Unsupported action approval state: ' + actionApprovalState);
+        }
+    };
+
+     /**
+     * Update an existing Action Approval entry, for a Turbonomic action on CLEARED state.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalForClearedCase = function(actionItem, actionApproval, targetEntityId, failed, succeeded) {
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+
+        //All cleared actions in Turbonomic are being ignored
+        succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : actionApproval.getChangeRequestId(),
+                                'state' : actionApprovalState,
+                                'isValid' : 'false'
+        });
+    };
+
+    /**
+     * Update an existing Action Approval entry, for a Turbonomic action on REJECTED state.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalForRejectedCase = function(actionItem, actionApproval, targetEntityId, failed, succeeded) {
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+        var changeRequest = new x_turbo_turbonomic.TurbonomicChangeRequest();
+        var details = '';
+
+        switch (actionApprovalState) {
+            case this._actionApprovalState.REJECTED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForRejectedCase() - ' +
+                        'The Action Approval state is already set to REJECTED, for the rejected/cleared Turbonomic action with OID: ' + actionItem.oid);
+
+                changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : actionApproval.getChangeRequestId(),
+                                'changeRequestNumber' : changeRequest.getNumber(),
+                                'state' : this._actionApprovalState.REJECTED,
+                                'isValid' : actionApproval.getValid()
+                });
+                break;
+            case this._actionApprovalState.APPROVED :
+            case this._actionApprovalState.WAITING_FOR_EXEC :
+            case this._actionApprovalState.IN_PROGRESS :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForRejectedCase() - ' +
+                        'The Action Approval state is APPROVED, WAITING_FOR_EXEC or IN_PROGRESS, for the rejected Turbonomic action with OID: ' + actionItem.oid);
+
+                details = 'Action failed to get executed with message: '
+                        + actionItem.executionDescription;
+
+                // Add work note to the change request
+                var changeRequestInfo = this.addWorkNote('TurbonomicActionApprovalManager.updateActionApprovalForRejectedCase()' ,
+                        actionApproval, details);
+
+
+                var stateId = this._actionDAO.getActionStateId(this._actionApprovalState.FAILED);
+                if (changeRequestInfo != null
+                        && this._actionDAO.updateActionApprovalRecord(
+                                actionItem, 'u_state', stateId)) {
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : changeRequestInfo.changeRequestId,
+                                    'changeRequestNumber' : changeRequestInfo.changeRequestNumber,
+                                    'state' : this._actionApprovalState.FAILED,
+                                    'isValid' : 'false'
+                    });
+
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForRejectedCase() - ' +
+                            'Successfully set the action approval state to FAILED, for the rejected Turbonomic action with OID: ' + actionItem.oid);
+                } else {
+                    failed.push({'oid' : actionItem.oid,
+                                 'errorMsg' : 'Cannot set the state to FAILED for action approval with OID: ' + actionItem.oid
+                    });
+                }
+
+                // Update the approval with the last action execution description
+                this.updateActionExecutionDescription(actionItem);
+
+                break;
+
+            case this._actionApprovalState.PENDING_APPROVAL :
+            case this._actionApprovalState.WAITING_FOR_CR_SCHEDULE :
+            case this._actionApprovalState.FAILED :
+            case this._actionApprovalState.SUCCEEDED :
+            case this._actionApprovalState.MISSED :
+            case this._actionApprovalState.REPLACED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForRejectedCase() - ' +
+                        'Cannot update the Action Approval entry for Turbonomic action on REJECTED or CLEARED state. Action Approval state = ' + actionApprovalState);
+
+                details = 'Unexpected state transition detected. Action Execution Description = '
+                        + actionItem.executionDescription + '; Turbonomic Action state = '
+                        + actionItem.state + '; Action Approval state = ' + actionApprovalState;
+
+                // Add audit record to mention the invalid Turbonomic action state
+                this._actionDAO.createOrUpdateActionRecord(actionItem.oid, details, '', targetEntityId,
+                        this._actionDAO.valueOrEmptyStr(actionItem.actionLifeCycleEvent));
+
+                failed.push({'oid' : actionItem.oid,
+                             'errorMsg' : 'Cannot update Action Approval entry for Turbonomic action with state: ' + actionItem.state
+                });
+                break;
+            default :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForRejectedCase() - ' +
+                        'Unsupported action approval state: ' + actionApprovalState);
+        }
+    };
+
+    /**
+     * Update an existing Action Approval entry, for a Turbonomic action on IN_PROGRESS state.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalForInProgressCase = function(actionItem, actionApproval, targetEntityId, failed, succeeded) {
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+        var counter = actionApproval.getCount() + 1;
+        var changeRequestInfo = null;
+
+        switch (actionApprovalState) {
+            case this._actionApprovalState.IN_PROGRESS :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForInProgressCase() - ' +
+                        'The Action Approval state is already set to IN_PROGRESS, for the in progress Turbonomic action with OID: ' + actionItem.oid);
+
+                changeRequestInfo = this.addWorkNoteToChangeRequest(
+                    'TurbonomicActionApprovalManager.updateActionApprovalForInProgressCase()',
+                    actionItem,
+                    actionApproval);
+                if (!changeRequestInfo) {
+                    break;
+                }
+
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : changeRequestInfo.changeRequestId,
+                                'changeRequestNumber' : changeRequestInfo.changeRequestNumber,
+                                'state' : this._actionApprovalState.IN_PROGRESS,
+                                'isValid' : 'true'
+                });
+                break;
+            case this._actionApprovalState.APPROVED :
+            case this._actionApprovalState.WAITING_FOR_EXEC :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForInProgressCase() - ' +
+                        'The Action Approval state is ' + actionApprovalState + ', for the in progress Turbonomic action with OID: ' + actionItem.oid);
+
+                changeRequestInfo = this.moveChangeRequest(
+                    'TurbonomicActionApprovalManager.updateActionApprovalForInProgressCase()',
+                    actionItem,
+                    actionApproval,
+                    this._actionDAO.getImplementChangeRequestState()
+                );
+                if (!changeRequestInfo) {
+                    break;
+                }
+
+                var stateId = this._actionDAO.getActionStateId(this._actionApprovalState.IN_PROGRESS);
+                if (this._actionDAO.updateActionApprovalRecord(actionItem, 'u_state', stateId)) {
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : changeRequestInfo.changeRequestId,
+                                    'changeRequestNumber' : changeRequestInfo.changeRequestNumber,
+                                    'state' : this._actionApprovalState.IN_PROGRESS,
+                                    'isValid' : 'true'
+                    });
+
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForInProgressCase() - ' +
+                            'Successfully set the action approval state to IN_PROGRESS, for the in progress Turbonomic action with OID: ' + actionItem.oid);
+                } else {
+                    failed.push({'oid' : actionItem.oid,
+                                 'errorMsg' : 'Cannot set the state to IN_PROGRESS for action approval with OID: ' + actionItem.oid
+                    });
+                }
+
+                this.updateActionExecutionDescription(actionItem);
+
+                break;
+            case this._actionApprovalState.PENDING_APPROVAL :
+            case this._actionApprovalState.WAITING_FOR_CR_SCHEDULE :
+            case this._actionApprovalState.REJECTED :
+            case this._actionApprovalState.MISSED :
+            case this._actionApprovalState.FAILED :
+            case this._actionApprovalState.SUCCEEDED :
+            case this._actionApprovalState.REPLACED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForInProgressCase() - ' +
+                        'Cannot update the Action Approval entry for Turbonomic action on IN_PROGRESS state. Action Approval state = ' + actionApprovalState);
+
+                var details = 'Unexpected state transition detected. Action Execution Description = '
+                        + actionItem.executionDescription + '; Turbonomic Action state = '
+                        + actionItem.state + '; Action Approval state = ' + actionApprovalState;
+
+                // Add audit record to mention the invalid Turbonomic action state
+                this._actionDAO.createOrUpdateActionRecord(actionItem.oid, details, '', targetEntityId,
+                        this._actionDAO.valueOrEmptyStr(actionItem.actionLifeCycleEvent));
+
+                failed.push({'oid' : actionItem.oid,
+                             'errorMsg' : 'Cannot update Action Approval entry for Turbonomic action with state: ' + actionItem.state
+                });
+                break;
+            default :
+                gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForInProgressCase() - ' +
+                        'Unsupported action approval state: ' + actionApprovalState);
+        }
+    };
+
+    /**
+     * Update an existing Action Approval entry, for a Turbonomic action on SUCCEEDED state.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalForSucceededCase = function(actionItem, actionApproval, targetEntityId, failed, succeeded) {
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+        var changeRequestInfo = null;
+        var details = '';
+
+        switch (actionApprovalState) {
+            case this._actionApprovalState.SUCCEEDED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForSucceededCase() - ' +
+                        'The Action Approval state is SUCCEEDED, for the succeeded Turbonomic action with OID: ' + actionItem.oid);
+
+                var changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : actionApproval.getChangeRequestId(),
+                                'changeRequestNumber' : changeRequest.getNumber(),
+                                'state' : this._actionApprovalState.SUCCEEDED,
+                                'isValid' : 'true'
+                });
+                break;
+            case this._actionApprovalState.APPROVED :
+            case this._actionApprovalState.WAITING_FOR_EXEC :
+            case this._actionApprovalState.IN_PROGRESS :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForSucceededCase() - ' +
+                        'The Action Approval state is APPROVED, WAITING_FOR_EXEC or IN_PROGRESS, for the succeeded Turbonomic action with OID: ' + actionItem.oid);
+
+                var stateId = this._actionDAO.getActionStateId(this._actionApprovalState.SUCCEEDED);
+                var actionApprovalUpdated = this._actionDAO.updateActionApprovalRecord(actionItem, 'u_state', stateId);
+
+                details = 'Action successfully executed with message: '
+                        + actionItem.executionDescription;
+
+                // Add work note to the change request
+                this.addWorkNote('TurbonomicActionApprovalManager.updateActionApprovalForRejectedCase()' ,
+                        actionApproval, details);
+
+                changeRequestInfo = this.moveChangeRequest(
+                    'TurbonomicActionApprovalManager.updateActionApprovalForSucceededCase()',
+                    actionItem,
+                    actionApproval,
+                    this._changeRequestStates.CLOSE_CODE_SUCCESSFUL
+                );
+
+                if (!changeRequestInfo) {
+                    break;
+                }
+
+                if (actionApprovalUpdated) {
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : changeRequestInfo.changeRequestId,
+                                    'changeRequestNumber' : changeRequestInfo.changeRequestNumber,
+                                    'state' : this._actionApprovalState.SUCCEEDED,
+                                    'isValid' : 'true'
+                    });
+
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForSucceededCase() - ' +
+                            'Successfully set the action approval state to SUCCEEDED, for the succeeded Turbonomic action with OID: ' + actionItem.oid);
+                } else {
+                    failed.push({'oid' : actionItem.oid,
+                                 'errorMsg' : 'Cannot set the state to SUCCEEDED for action approval with OID: ' + actionItem.oid
+                    });
+                }
+
+                this.updateActionExecutionDescription(actionItem);
+
+                break;
+            case this._actionApprovalState.PENDING_APPROVAL :
+            case this._actionApprovalState.WAITING_FOR_CR_SCHEDULE :
+            case this._actionApprovalState.REJECTED :
+            case this._actionApprovalState.FAILED :
+            case this._actionApprovalState.MISSED :
+            case this._actionApprovalState.REPLACED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForSucceededCase() - ' +
+                        'Cannot update the Action Approval entry for Turbonomic action on SUCCEEDED state. Action Approval state = ' + actionApprovalState);
+
+                details = 'Unexpected state transition detected. Action Execution Description = '
+                        + actionItem.executionDescription + '; Turbonomic Action state = '
+                        + actionItem.state + '; Action Approval state = ' + actionApprovalState;
+
+                // Add audit record to mention the invalid Turbonomic action state
+                this._actionDAO.createOrUpdateActionRecord(actionItem.oid, details, '', targetEntityId,
+                        this._actionDAO.valueOrEmptyStr(actionItem.actionLifeCycleEvent));
+
+                failed.push({'oid' : actionItem.oid,
+                             'errorMsg' : 'Cannot update Action Approval entry for Turbonomic action with state: ' + actionItem.state
+                });
+                break;
+            default :
+                gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForSucceededCase() - ' +
+                        'Unsupported action approval state: ' + actionApprovalState);
+        }
+    };
+
+    /**
+     * Update an existing Action Approval entry, for a Turbonomic action on FAILED state.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalForFailedCase = function(actionItem, actionApproval, targetEntityId, failed, succeeded) {
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+        var changeRequestInfo = null;
+        var details = '';
+
+        switch (actionApprovalState) {
+            case this._actionApprovalState.FAILED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForFailedCase() - ' +
+                        'The Action Approval state is FAILED, for the failed Turbonomic action with OID: ' + actionItem.oid);
+
+                var changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : actionApproval.getChangeRequestId(),
+                                'changeRequestNumber' : changeRequest.getNumber(),
+                                'state' : this._actionApprovalState.FAILED,
+                                'isValid' : 'false'
+                });
+                break;
+            case this._actionApprovalState.APPROVED :
+            case this._actionApprovalState.WAITING_FOR_EXEC :
+            case this._actionApprovalState.IN_PROGRESS :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForFailedCase() - ' +
+                        'The Action Approval state is APPROVED, WAITING_FOR_EXEC or IN_PROGRESS, for the failed Turbonomic action with OID: ' + actionItem.oid);
+
+                var stateId = this._actionDAO.getActionStateId(this._actionApprovalState.FAILED);
+                var actionApprovalUpdated = this._actionDAO.updateActionApprovalRecord(actionItem, 'u_state', stateId);
+
+				details = 'Action failed to get executed with message: '
+                        + actionItem.executionDescription;
+
+				// Add work note to the change request
+                this.addWorkNote('TurbonomicActionApprovalManager.updateActionApprovalForFailedCase()' ,
+                        actionApproval, details);
+
+                changeRequestInfo = this.moveChangeRequest(
+                    'TurbonomicActionApprovalManager.updateActionApprovalForFailedCase()',
+                    actionItem,
+                    actionApproval,
+                    this._changeRequestStates.CLOSE_CODE_UNSUCCESSFUL
+                );
+                if (!changeRequestInfo) {
+                    break;
+                }
+
+                if (actionApprovalUpdated) {
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : changeRequestInfo.changeRequestId,
+                                    'changeRequestNumber' : changeRequestInfo.changeRequestNumber,
+                                    'state' : this._actionApprovalState.FAILED,
+                                    'isValid' : 'true'
+                    });
+
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForFailedCase() - ' +
+                            'Successfully set the action approval state to FAILED, for the failed Turbonomic action with OID: ' + actionItem.oid);
+                } else {
+                    failed.push({'oid' : actionItem.oid,
+                                 'errorMsg' : 'Cannot set the state to FAILED for action approval with OID: ' + actionItem.oid
+                    });
+                }
+
+                this.updateActionExecutionDescription(actionItem);
+
+                break;
+            case this._actionApprovalState.PENDING_APPROVAL :
+            case this._actionApprovalState.WAITING_FOR_CR_SCHEDULE :
+            case this._actionApprovalState.REJECTED :
+            case this._actionApprovalState.SUCCEEDED :
+            case this._actionApprovalState.MISSED :
+            case this._actionApprovalState.REPLACED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForFailedCase() - ' +
+                        'Cannot update the Action Approval entry for Turbonomic action on FAILED state. Action Approval state = ' + actionApprovalState);
+
+                details = 'Unexpected state transition detected. Action Execution Description = '
+                        + actionItem.executionDescription + '; Turbonomic Action state = '
+                        + actionItem.state + '; Action Approval state = ' + actionApprovalState;
+
+                // Add audit record to mention the invalid Turbonomic action state
+                this._actionDAO.createOrUpdateActionRecord(actionItem.oid, details, '', targetEntityId,
+                        this._actionDAO.valueOrEmptyStr(actionItem.actionLifeCycleEvent));
+
+                failed.push({'oid' : actionItem.oid,
+                             'errorMsg' : 'Cannot update Action Approval entry for Turbonomic action with state: ' + actionItem.state
+                });
+                break;
+            default :
+                gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForFailedCase() - ' +
+                        'Unsupported action approval state: ' + actionApprovalState);
+        }
+    };
+
+    /**
+     * Update an existing Action Approval entry, for a Turbonomic action on QUEUED state.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalForQueuedCase = function(actionItem, actionApproval, targetEntityId, failed, succeeded) {
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+        var changeRequestInfo = null;
+        var counter = actionApproval.getCount() + 1;
+        var isValid = 'false';
+
+        switch (actionApprovalState) {
+            case this._actionApprovalState.WAITING_FOR_EXEC :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase() - ' +
+                        'The Action Approval state is already set to WAITING_FOR_EXEC, for the queued Turbonomic action with OID: ' + actionItem.oid);
+
+                if (this._actionDAO.updateActionApprovalRecord(actionItem, 'u_count', counter)) {
+                    isValid = 'true';
+                    gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase() - ' +
+                            'Successfully updated the action approval counter value; counter = ' + counter);
+				} else {
+                    isValid = 'false';
+                    gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase() - ' +
+                            'Failed to update the action approval counter value; counter = ' + counter);
+                }
+
+                changeRequestInfo = this.moveChangeRequest(
+                    'TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase()',
+                    actionItem,
+                    actionApproval,
+                    this._actionDAO.getImplementChangeRequestState()
+                );
+                if (!changeRequestInfo) {
+                    break;
+                }
+
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : changeRequestInfo.changeRequestId,
+                                'changeRequestNumber' : changeRequestInfo.changeRequestNumber,
+                                'state' : this._actionApprovalState.WAITING_FOR_EXEC,
+                                'isValid' : isValid
+                });
+                break;
+            case this._actionApprovalState.APPROVED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase() - ' +
+                        'The Action Approval state is APPROVED, for the queued Turbonomic action with OID: ' + actionItem.oid);
+
+                if (this._actionDAO.updateActionApprovalRecord(actionItem, 'u_count', counter)) {
+                    isValid = 'true';
+                    gs.debug('TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase() - ' +
+                            'Successfully updated the action approval counter value; counter = ' + counter);
+				} else {
+                    gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase() - ' +
+                            'Failed to update the action approval counter value; counter = ' + counter);
+                }
+
+                changeRequestInfo = this.moveChangeRequest(
+                    'TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase()',
+                    actionItem,
+                    actionApproval,
+                    this._actionDAO.getImplementChangeRequestState()
+                );
+                if (!changeRequestInfo) {
+                    break;
+                }
+
+                var stateId = this._actionDAO.getActionStateId(this._actionApprovalState.WAITING_FOR_EXEC);
+                if (this._actionDAO.updateActionApprovalRecord(actionItem, 'u_state', stateId)) {
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : changeRequestInfo.changeRequestId,
+                                    'changeRequestNumber' : changeRequestInfo.changeRequestNumber,
+                                    'state' : this._actionApprovalState.WAITING_FOR_EXEC,
+                                    'isValid' : 'true'
+                    });
+
+                    gs.info('TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase() - ' +
+                            'Successfully set the action approval state to WAITING_FOR_EXEC, for the queued Turbonomic action with OID: ' + actionItem.oid);
+                } else {
+                    failed.push({'oid' : actionItem.oid,
+                                 'errorMsg' : 'Cannot set the state to WAITING_FOR_EXEC for action approval with OID: ' + actionItem.oid
+                    });
+                }
+
+                this.updateActionExecutionDescription(actionItem);
+
+                break;
+            case this._actionApprovalState.PENDING_APPROVAL :
+            case this._actionApprovalState.WAITING_FOR_CR_SCHEDULE :
+            case this._actionApprovalState.REJECTED :
+            case this._actionApprovalState.IN_PROGRESS :
+            case this._actionApprovalState.MISSED :
+            case this._actionApprovalState.FAILED :
+            case this._actionApprovalState.SUCCEEDED :
+            case this._actionApprovalState.REPLACED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase() - ' +
+                        'Cannot update the Action Approval entry for Turbonomic action on QUEUED state. Action Approval state = ' + actionApprovalState);
+
+                var details = 'Unexpected state transition detected. Action Execution Description = '
+                        + actionItem.executionDescription + '; Turbonomic Action state = '
+                        + actionItem.state + '; Action Approval state = ' + actionApprovalState;
+
+                // Add audit record to mention the invalid Turbonomic action state
+                this._actionDAO.createOrUpdateActionRecord(actionItem.oid, details, '', targetEntityId,
+                        this._actionDAO.valueOrEmptyStr(actionItem.actionLifeCycleEvent));
+
+                failed.push({'oid' : actionItem.oid,
+                             'errorMsg' : 'Cannot update Action Approval entry for Turbonomic action with state: ' + actionItem.state
+                });
+                break;
+            default :
+                gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForQueuedCase() - ' +
+                        'Unsupported action approval state: ' + actionApprovalState);
+        }
+    };
+
+    /**
+     * Update an existing Action Approval entry, for a Turbonomic action on DISABLED or RECOMMENDED state.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param targetEntityId The ID of the target Turbonomic entity, for the action approval that will be updated.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalForDisabledCase = function(actionItem, actionApproval, targetEntityId, failed) {
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+
+        switch (actionApprovalState) {
+            case this._actionApprovalState.PENDING_APPROVAL :
+            case this._actionApprovalState.WAITING_FOR_CR_SCHEDULE :
+            case this._actionApprovalState.APPROVED :
+            case this._actionApprovalState.REJECTED :
+            case this._actionApprovalState.WAITING_FOR_EXEC :
+            case this._actionApprovalState.IN_PROGRESS :
+            case this._actionApprovalState.FAILED :
+            case this._actionApprovalState.SUCCEEDED :
+            case this._actionApprovalState.MISSED :
+            case this._actionApprovalState.REPLACED :
+                gs.info('TurbonomicActionApprovalManager.updateActionApprovalForDisabledCase() - ' +
+                        'Cannot update the Action Approval entry for Turbonomic action on DISABLED or RECOMMENDED state. Action Approval state = ' + actionApprovalState);
+
+                var details = 'Unexpected state transition detected. Action Execution Description = '
+                        + actionItem.description + '; Turbonomic Action state = '
+                        + actionItem.state + '; Action Approval state = ' + actionApprovalState;
+
+                // Add audit record to mention the invalid Turbonomic action state
+                this._actionDAO.createOrUpdateActionRecord(actionItem.oid, details, '', targetEntityId,
+                        this._actionDAO.valueOrEmptyStr(actionItem.actionLifeCycleEvent));
+
+                failed.push({'oid' : actionItem.oid,
+                             'errorMsg' : 'Cannot update Action Approval entry for Turbonomic action with state: ' + actionItem.state
+                });
+                break;
+            default :
+                gs.warn('TurbonomicActionApprovalManager.updateActionApprovalForDisabledCase() - ' +
+                        'Unsupported action approval state: ' + actionApprovalState);
+        }
+    };
+
+    /**
+     * Adds a work note using the information from action, to change request linked to the action
+     * approval. If change requests is disabled in settings, we do not add a work note to the change
+     * request.
+     *
+     * @param logPrefix The prefix used for logging when something bad happens, or debugging.
+     * @param actionItem The action item to get the details that are placed into the work note of
+     *                   the change request.
+     * @param actionApproval The action approval that has a change request that we add a work note
+     *                       to.
+     * @return the change request that was changed.
+     *         returns empty change request if change requests are disabled.
+     *         returns undefined if there was an error.
+     */
+    TurbonomicActionApprovalManager.prototype.addWorkNoteToChangeRequest = function(
+            logPrefix,
+            actionItem,
+            actionApproval) {
+        return this.moveChangeRequest(
+            logPrefix,
+            actionItem,
+            actionApproval,
+            null); // indicates that there is no state change. work note is still added
+    };
+
+    /**
+     * Adds a work note to the change request and also moves the change request into the state given by newCRState.
+     * If change requests is disabled in settings, the change request is not modified.
+     *
+     * @param logPrefix The prefix used for logging when something bad happens, or debugging.
+     * @param actionItem The action item to get the details that are placed into the work note of
+     *                   the change request.
+     * @param actionApproval The action approval that has a change request that we add a work note
+     *                       to and update the change request's state to newCRState.
+     * @param newCRState The state to move the change request state to.
+     *                   null means do not change the state.
+     * @return the change request that was changed.
+     *         returns empty change request if change requests are disabled.
+     *         returns undefined if there was an error.
+     */
+    TurbonomicActionApprovalManager.prototype.moveChangeRequest = function(
+            logPrefix,
+            actionItem,
+            actionApproval,
+            newCRState) {
+        var changeRequestId;
+        var changeRequestNumber;
+
+        if (this._actionDAO.isChangeRequestDisabled()) {
+            var emptyChangeRequest = this._actionDAO.makeEmptyChangeRequest();
+            changeRequestId = emptyChangeRequest.getId();
+            changeRequestNumber = emptyChangeRequest.getNumber();
+        } else {
+            // update change request
+            var changeRequestRecord = this._changeRequestDAO.getChangeRequestBySysId(actionApproval.getChangeRequestId());
+            changeRequestId = actionApproval.getChangeRequestId();
+            if (changeRequestRecord == null) {
+                var errorMsg = logPrefix + " - could not find change request for approval: "
+                    + actionApproval.oid + " action from Turbonomic: " + JSON.stringify(actionItem);
+                gs.info(errorMsg);
+                failed.push({'oid' : actionItem.oid, 'errorMsg' : errorMsg });
+                return;
+            }
+
+            this.addWorkNoteToChangeRequestRecord(changeRequestId, actionItem);
+            var implementChangeRequestState = this._actionDAO.getImplementChangeRequestState();
+            switch (newCRState) {
+                case implementChangeRequestState :
+                    this.moveChangeRequestToImplement(changeRequestId, changeRequestRecord.state.toString());
+                break;
+                case this._changeRequestStates.CLOSE_CODE_SUCCESSFUL :
+                case this._changeRequestStates.CLOSE_CODE_UNSUCCESSFUL :
+                    this.moveChangeRequestToClosed(changeRequestId, actionItem, newCRState);
+                break;
+            }
+
+            changeRequestNumber = changeRequestRecord.number.toString();
+        }
+
+        return {changeRequestId: changeRequestId, changeRequestNumber: changeRequestNumber};
+    };
+
+    /**
+     * Adds a worknote usind details from the actionItem into the provided changeRequestRecord.
+     *
+     * @param changeRequestId The sys_id of the change request to add work notes to.
+     * @param actionItem The action item to extract details from to put into the change request.
+     */
+    TurbonomicActionApprovalManager.prototype.addWorkNoteToChangeRequestRecord = function(changeRequestId, actionItem) {
+        var progress = actionItem.progress;
+        var workNote = actionItem.executionDescription;
+        if (workNote != null && progress != null && progress > 0) {
+            this._actionDAO.insertIntoImportSet(this._tableNames.CHANGE_REQUEST_IMPORT_SET,
+                {
+                    u_update_sys_id: changeRequestId, // use the sysId to update
+                    u_work_notes: "Action execution progress is " + progress + "%. " + workNote
+                },
+                'TurbonomicActionApprovalManager.addWorkNoteToChangeRequestRecord() - Successfully added worknote to change_request: ' + changeRequestId);
+        }
+    };
+
+    /**
+     * Adds a worknote usind details from the actionItem into the provided changeRequestRecord.
+     *
+     * @param logPrefix The prefix prepended to log messages
+     * @param actionApproval The action approval we are adding worknote to.
+     * @param workNote the string that will be added to wroknote.
+     * @returns an object that has changeRequestId and changeRequestNumber for the change request
+     * record associated to that approval.
+     */
+    TurbonomicActionApprovalManager.prototype.addWorkNote = function(logPrefix, actionApproval, workNote) {
+        var changeRequestRecord = this._changeRequestDAO.getChangeRequestBySysId(actionApproval.getChangeRequestId());
+        var changeRequestId;
+        var changeRequestNumber;
+        if (changeRequestRecord == null) {
+            var errorMsg = logPrefix + " - could not find change request for approval: "
+                + actionApproval.oid + " in order to add work note: " + workNote;
+            gs.info(errorMsg);
+            return;
+        }
+
+        changeRequestId = actionApproval.getChangeRequestId();
+        changeRequestNumber = changeRequestRecord.number.toString();
+
+        this._actionDAO.insertIntoImportSet(this._tableNames.CHANGE_REQUEST_IMPORT_SET,
+            {
+                u_update_sys_id: changeRequestId, // use the sysId to update
+                u_work_notes: workNote
+            },
+            'TurbonomicActionApprovalManager.addWorkNote() - Successfully added worknote to change_request: ' + changeRequestId);
+
+        return {changeRequestId: changeRequestId, changeRequestNumber: changeRequestNumber};
+    };
+
+    /**
+     * Puts a change request into the implement state.
+     *
+     * @param changeRequestId The sys_id of the change request to put into the implement state.
+     * @param stateStr The current state of the change request.
+     */
+    TurbonomicActionApprovalManager.prototype.moveChangeRequestToImplement = function(changeRequestId, stateStr) {
+        if (stateStr === this._actionDAO.getAppprovedChangeRequestState()) {
+            this._actionDAO.insertIntoImportSet(this._tableNames.CHANGE_REQUEST_IMPORT_SET,
+                {
+                    u_update_sys_id: changeRequestId, // use the sysId to update
+                    u_state: this._actionDAO.getImplementChangeRequestState()
+                },
+                'TurbonomicActionApprovalManager.moveChangeRequestToImplement() - Successfully moved change request to implement: ' + changeRequestId);
+        }
+    };
+
+    /**
+     * Closes the provided change request with details from the actionItem and closure code provided
+     * by success.
+     *
+     * @param changeRequestId The sys_id of the change request to close.
+     * @param actionItem The actionItem to extract action execution details from.
+     * @param closeCode The close code to close the change request with.
+     */
+    TurbonomicActionApprovalManager.prototype.moveChangeRequestToClosed = function(changeRequestId, actionItem, closeCode) {
+        var changeRequestRecord = this._changeRequestDAO.getChangeRequestBySysId(changeRequestId);
+        var stateStr = changeRequestRecord.state.toString();
+        this.moveChangeRequestToImplement(changeRequestId, stateStr);
+
+        var actionApproval = new GlideRecordSecure('x_turbo_turbonomic_turbonomic_action_approval');
+        actionApproval.addQuery('change_request_id', changeRequestId);
+        actionApproval.query();
+
+        var succeededApprovals = 0;
+        var failedApprovals = 0;
+        var missedApprovals = 0;
+        var replacedApprovals = 0;
+        var allApprovals = 0;
+        var crCloseNotes = '';
+        while (actionApproval.next()) {
+            allApprovals = allApprovals + 1;
+            var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.state_id);
+
+            if (actionApprovalState == this._actionApprovalState.FAILED) {
+                failedApprovals = failedApprovals + 1;
+                crCloseNotes = crCloseNotes + actionApproval.getValue('description') + ";";
+            } else if (actionApprovalState == this._actionApprovalState.SUCCEEDED) {
+                succeededApprovals = succeededApprovals + 1;
+                crCloseNotes = crCloseNotes + actionApproval.getValue('description') + ";";
+            } else if (actionApprovalState == this._actionApprovalState.MISSED) {
+                missedApprovals = missedApprovals + 1;
+            } else if (actionApprovalState == this._actionApprovalState.REPLACED) {
+                replacedApprovals = replacedApprovals + 1;
+            }
+        }
+
+        gs.info('TurbonomicActionApprovalManager.moveChangeRequestToClosed() - For change request ' + changeRequestRecord.number + ' there are: ' +
+                failedApprovals + ' FAILED action approvals, ' + succeededApprovals + ' SUCCEEDED action approvals, ' + missedApprovals +
+                ' MISSED action approvals, ' + replacedApprovals + ' REPLACED action approvals;' + ' total CR referenced action approvals = ' + allApprovals);
+
+        if (succeededApprovals + failedApprovals + missedApprovals + replacedApprovals != allApprovals) {
+            gs.info('TurbonomicActionApprovalManager.moveChangeRequestToClosed() - CR will not be closed. Not all referenced action approvals are' +
+                ' on FAILED, SUCCEEDED, REPLACED or MISSED state for CR: ' + changeRequestRecord.number);
+            return;
+        }
+
+        if (failedApprovals > 0 && closeCode != this._changeRequestStates.CLOSE_CODE_UNSUCCESSFUL) {
+            gs.info('TurbonomicActionApprovalManager.moveChangeRequestToClosed() - Closing the CR ' + changeRequestRecord.number +
+                    ' as Unsuccesful because at least one of its referenced action approvals failed its execution');
+            closeCode = this._changeRequestStates.CLOSE_CODE_UNSUCCESSFUL;
+		}
+
+        // since updates go through import set, changes to change_request will not reach our current
+        // glide record reference. need to get a more recent view of change_request
+        changeRequestRecord = this._changeRequestDAO.getChangeRequestBySysId(changeRequestId);
+        stateStr = changeRequestRecord.state.toString();
+        if (stateStr === this._actionDAO.getImplementChangeRequestState()) {
+            gs.info('TurbonomicActionApprovalManager.moveChangeRequestToClosed() - Change Request is in IMPLEMENT state. Moving it to REVIEW state...');
+            this._actionDAO.insertIntoImportSet(this._tableNames.CHANGE_REQUEST_IMPORT_SET,
+                {
+                    u_update_sys_id: changeRequestId, // use the sysId to update
+                    u_state: this._changeRequestStates.REVIEW
+                },
+                'TurbonomicActionApprovalManager.moveChangeRequestToClosed() - Successfully moved changed request to review: ' + changeRequestId);
+        }
+
+        // since updates go through import set, changes to change_request will not reach our current
+        // glide record reference. need to get a more recent view of change_request
+        changeRequestRecord = this._changeRequestDAO.getChangeRequestBySysId(changeRequestId);
+        stateStr = changeRequestRecord.state.toString();
+        if (stateStr === this._changeRequestStates.REVIEW) {
+            gs.info('TurbonomicActionApprovalManager.moveChangeRequestToClosed() - Change Request is in REVIEW state. Moving it to CLOSED state...');
+            var closedChangeRequestState = this._actionDAO.getClosedChangeRequestState();
+            this._actionDAO.insertIntoImportSet(this._tableNames.CHANGE_REQUEST_IMPORT_SET,
+                {
+                    u_update_sys_id: changeRequestId, // use the sysId to update
+                    u_state: closedChangeRequestState,
+                    u_close_code: closeCode,
+                    u_close_notes: crCloseNotes
+                },
+                'TurbonomicActionApprovalManager.moveChangeRequestToClosed() - Successfully closed changed request: ' + changeRequestId);
+        }
+    };
+
+    /**
+    * Update action's execution description.
+    * @param actionItem The actionItem to extract action execution details from.
+    */
+    TurbonomicActionApprovalManager.prototype.updateActionExecutionDescription = function(actionItem) {
+        var executionDescription = actionItem.executionDescription;
+        this._actionDAO.updateActionApprovalRecord(actionItem, 'u_most_recent_on_description', executionDescription);
+    };
+
+    /**
+     * Mark the action approvals as missed, as necessary. Afterwards, cancel their corresponding change requests too.
+     */
+    TurbonomicActionApprovalManager.prototype.markMissedActionApprovals = function() {
+        var changeRequestIds = this._actionDAO.markMissedActionApprovals();
+        this._changeRequestDAO.cancelChangeRequests(changeRequestIds);
+    };
+
+    /**
+     * Update an existing Action Approval entry based on the CR schedule. The valid Turbonomic action state are PENDING_ACCEPT or ACCEPTED.
+     *
+     * @param actionItem The input Turbonomic action item.
+     * @param actionApproval The Action Approval entry that will be updated.
+     * @param logPrefix The input log prefix string.
+     * @param failed The input array with the details about the failed approval updates.
+     * @param succeeded The input array with the details about the successful approval updates.
+     */
+    TurbonomicActionApprovalManager.prototype.updateActionApprovalWaitingForChangeRequestSchedule = function(actionItem, actionApproval, logPrefix, failed, succeeded) {
+        var actionUtils = new x_turbo_turbonomic.TurbonomicActionUtils();
+        var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.getStateId()).toUpperCase();
+        var changeRequest = new x_turbo_turbonomic.TurbonomicChangeRequest();
+        var counter = actionApproval.getCount() + 1;
+        var isValid = 'false';
+
+        if (this._actionDAO.updateActionApprovalRecord(actionItem, 'u_count', counter)) {
+            isValid = 'true';
+            gs.debug(logPrefix + 'Successfully updated the counter for action approval waiting for CR schedule; ' +
+                     'Action OID = ' + actionItem.oid);
+        } else {
+            gs.warn(logPrefix + 'Cannot update the counter for action approval waiting for CR schedule; ' +
+                    'Action OID = ' + actionItem.oid);
+            failed.push({'oid' : actionItem.oid,
+                         'errorMsg' : 'Cannot update the counter for action approval with OID: ' + actionItem.oid
+            });
+            return;
+        }
+
+        changeRequest = this._actionDAO.getChangeRequestById(actionApproval.getChangeRequestId());
+        if (this._actionDAO.isChangeRequestDisabled()) {
+            gs.debug(logPrefix + 'Change request and matching action approval state changes are handled by custom business rule(s)');
+            succeeded.push({'oid' : actionItem.oid,
+                            'changeRequestId' : actionApproval.getChangeRequestId(),
+                            'changeRequestNumber' : changeRequest.getNumber(),
+                            'state' : this._actionApprovalState.PENDING_APPROVAL,
+                            'isValid' : isValid
+            });
+
+            return;
+        }
+
+        gs.debug(logPrefix + 'The action approval state is WAITING_FOR_CR_SCHEDULE. Checking if the CR schedule is ON.');
+
+        var changeRequestRecord = new GlideRecordSecure(this._tableNames.CHANGE_REQUEST);
+        changeRequestRecord.addQuery('sys_id', actionApproval.getChangeRequestId());
+        changeRequestRecord.query();
+
+        if (!changeRequestRecord.next()) {
+            gs.warn(logPrefix + 'Cannot find the matching CR for action approval waiting for CR schedule; ' +
+                    'Change Request ID = ' + actionApproval.getChangeRequestId());
+            failed.push({'oid' : actionItem.oid,
+                         'errorMsg' : 'Cannot find the change request record with ID: ' + actionApproval.getChangeRequestId()
+            });
+            return;
+		}
+
+        var approvalSysId = actionApproval.getSysId();
+        var actionStateId = '';
+        var changeRequestState = changeRequestRecord.state + '';
+
+        gs.debug(logPrefix + 'Change Request State = ' + actionUtils.printRequestState(changeRequestState) +
+                 ', matching action approval state = ' + actionApprovalState + '; CR number = ' + changeRequest.getNumber());
+
+        var approvedChangeRequestState = this._actionDAO.getAppprovedChangeRequestState();
+        var implementChangeRequestState = this._actionDAO.getImplementChangeRequestState();
+        var canceledChangeRequestState = this._actionDAO.getCanceledChangeRequestState();
+        switch (changeRequestState) {
+            case approvedChangeRequestState:
+            case implementChangeRequestState:
+                if (changeRequestRecord.start_date.nil() || actionUtils.isChangeRequestScheduleOn(changeRequestRecord)) {
+                    gs.debug(logPrefix + 'The CR schedule is ON or is not configured.');
+                    actionStateId = this._actionDAO.getActionStateId(this._actionApprovalState.APPROVED);
+                    this._actionDAO.insertIntoImportSet(this._tableNames.ACTION_APPROVAL_IMPORT_SET,
+                        {
+                            u_update_sys_id: approvalSysId, // use the sysId to update
+                            u_state: actionStateId
+                        },
+                        logPrefix + 'Successfully APPROVED the matching action approval entry for change request: ' +
+                            changeRequest.getNumber());
+
+                    succeeded.push({'oid' : actionItem.oid,
+                                    'changeRequestId' : actionApproval.getChangeRequestId(),
+                                    'changeRequestNumber' : changeRequest.getNumber(),
+                                    'state' : this._actionApprovalState.APPROVED,
+                                    'isValid' : isValid
+                    });
+                } else {
+                    var actionItemState = actionItem.state.toUpperCase();
+                    if (actionItemState.equals(this._turbonomicActionItemState.PENDING_ACCEPT)) {
+                        gs.debug(logPrefix + 'The CR schedule is not ON.');
+                        succeeded.push({'oid' : actionItem.oid,
+                                        'changeRequestId' : actionApproval.getChangeRequestId(),
+                                        'changeRequestNumber' : changeRequest.getNumber(),
+                                        'state' : this._actionApprovalState.PENDING_APPROVAL,
+                                        'isValid' : isValid
+                        });
+                    } else if (actionItemState.equals(this._turbonomicActionItemState.ACCEPTED)) {
+                        gs.debug(logPrefix + 'The CR schedule is not ON for an already approved Turbonomic action.');
+                        succeeded.push({'oid' : actionItem.oid,
+                                        'changeRequestId' : actionApproval.getChangeRequestId(),
+                                        'changeRequestNumber' : changeRequest.getNumber(),
+                                        'state' : this._actionApprovalState.APPROVED,
+                                        'isValid' : isValid
+                        });
+					} else {
+                        gs.warn(logPrefix + 'The CR schedule is not ON for a Turbonomic action with state: ' + actionItemState);
+                        succeeded.push({'oid' : actionItem.oid,
+                                        'changeRequestId' : actionApproval.getChangeRequestId(),
+                                        'changeRequestNumber' : changeRequest.getNumber(),
+                                        'state' : this._actionApprovalState.PENDING_APPROVAL,
+                                        'isValid' : isValid
+                        });
+                    }
+                }
+
+                break;
+            case canceledChangeRequestState:
+                gs.debug(logPrefix + 'The CR has been canceled.');
+                actionStateId = this._actionDAO.getActionStateId(this._actionApprovalState.REJECTED);
+                this._actionDAO.insertIntoImportSet(this._tableNames.ACTION_APPROVAL_IMPORT_SET,
+                    {
+                        u_update_sys_id: approvalSysId, // use the sysId to update
+                        u_state: actionStateId
+                    },
+                    logPrefix + 'Successfully REJECTED the matching action approval entry for change request: ' +
+                        changeRequest.getNumber());
+
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : actionApproval.getChangeRequestId(),
+                                'changeRequestNumber' : changeRequest.getNumber(),
+                                'state' : this._actionApprovalState.REJECTED,
+                                'isValid' : 'false'
+                });
+
+                break;
+            default:
+                gs.debug(logPrefix + 'CR state = ' + changeRequestState);
+                succeeded.push({'oid' : actionItem.oid,
+                                'changeRequestId' : actionApproval.getChangeRequestId(),
+                                'changeRequestNumber' : changeRequest.getNumber(),
+                                'state' : this._actionApprovalState.PENDING_APPROVAL,
+                                'isValid' : isValid
+                });
+        }
+    };
+
+    return TurbonomicActionApprovalManager;
+}());
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>josephmate</sys_created_by>
+        <sys_created_on>2019-05-08 12:21:53</sys_created_on>
+        <sys_id>7b11a8a5db5dbb405e691fe9689619d5</sys_id>
+        <sys_mod_count>27</sys_mod_count>
+        <sys_name>TurbonomicActionApprovalManager</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_script_include_7b11a8a5db5dbb405e691fe9689619d5</sys_update_name>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2023-11-02 20:07:51</sys_updated_on>
+    </sys_script_include>
+</record_update>

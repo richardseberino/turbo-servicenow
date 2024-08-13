@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_turbo_turbonomic.TurbonomicActionApprovalState</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>TurbonomicActionApprovalState</name>
+        <script><![CDATA[var TurbonomicActionApprovalState =  (function () {
+
+    TurbonomicActionApprovalState.prototype.type = 'TurbonomicActionApprovalState';
+
+    function TurbonomicActionApprovalState() {
+    }
+
+    /**
+     * These are the states that track the progress of an action approval in ServiceNow.
+     */
+    TurbonomicActionApprovalState.prototype.PENDING_APPROVAL = 'PENDING_APPROVAL';
+    TurbonomicActionApprovalState.prototype.APPROVED = 'APPROVED';
+    TurbonomicActionApprovalState.prototype.REJECTED = 'REJECTED';
+    TurbonomicActionApprovalState.prototype.WAITING_FOR_EXEC = 'WAITING_FOR_EXEC';
+    TurbonomicActionApprovalState.prototype.IN_PROGRESS = 'IN_PROGRESS';
+    TurbonomicActionApprovalState.prototype.SUCCEEDED = 'SUCCEEDED';
+    TurbonomicActionApprovalState.prototype.FAILED = 'FAILED';
+    TurbonomicActionApprovalState.prototype.MISSED = 'MISSED';
+	TurbonomicActionApprovalState.prototype.WAITING_FOR_CR_SCHEDULE = 'WAITING_FOR_CR_SCHEDULE';
+    TurbonomicActionApprovalState.prototype.REPLACED = 'REPLACED';
+
+    return TurbonomicActionApprovalState;
+}());
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>josephmate</sys_created_by>
+        <sys_created_on>2019-05-08 12:20:57</sys_created_on>
+        <sys_id>9fe06ce1db9dbb405e691fe968961900</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>TurbonomicActionApprovalState</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_script_include_9fe06ce1db9dbb405e691fe968961900</sys_update_name>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2023-04-05 20:02:10</sys_updated_on>
+    </sys_script_include>
+</record_update>

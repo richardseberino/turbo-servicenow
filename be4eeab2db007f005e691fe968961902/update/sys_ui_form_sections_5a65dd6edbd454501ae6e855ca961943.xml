@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_form_sections form_id="5a65dd6edbd454501ae6e855ca961943" sys_domain="global" table="x_turbo_turbonomic_turbonomic_settings" version="3">
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>0</position>
+            <sys_created_by>alexpetrean</sys_created_by>
+            <sys_created_on>2020-04-23 18:03:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>1e65dd6edbd454501ae6e855ca9619c2</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_turbo_turbonomic_turbonomic_settings" name="x_turbo_turbonomic_turbonomic_settings" sys_domain="global" view="Default view">5a65dd6edbd454501ae6e855ca961943</sys_ui_form>
+            <sys_ui_section caption="NULL" display_value="" name="x_turbo_turbonomic_turbonomic_settings" sys_domain="global" view="Default view">519b4f36db407f005e691fe96896196a</sys_ui_section>
+            <sys_updated_by>alexpetrean</sys_updated_by>
+            <sys_updated_on>2020-04-23 18:03:17</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>1</position>
+            <sys_created_by>alexpetrean</sys_created_by>
+            <sys_created_on>2020-04-23 18:03:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>1a65dd6edbd454501ae6e855ca9619c3</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_turbo_turbonomic_turbonomic_settings" name="x_turbo_turbonomic_turbonomic_settings" sys_domain="global" view="Default view">5a65dd6edbd454501ae6e855ca961943</sys_ui_form>
+            <sys_ui_section caption="CI Matching Details for Virtual Machines" display_value="CI Matching Details for Virtual Machines" name="x_turbo_turbonomic_turbonomic_settings" sys_domain="global" view="Default view">da65dd6edbd454501ae6e855ca961941</sys_ui_section>
+            <sys_updated_by>alexpetrean</sys_updated_by>
+            <sys_updated_on>2020-04-23 18:03:17</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form action="INSERT_OR_UPDATE">
+            <name>x_turbo_turbonomic_turbonomic_settings</name>
+            <roles/>
+            <sys_class_name>sys_ui_form</sys_class_name>
+            <sys_created_by>alexpetrean</sys_created_by>
+            <sys_created_on>2020-04-23 18:03:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>5a65dd6edbd454501ae6e855ca961943</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_turbo_turbonomic_turbonomic_settings</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+            <sys_update_name>sys_ui_form_sections_5a65dd6edbd454501ae6e855ca961943</sys_update_name>
+            <sys_updated_by>alexpetrean</sys_updated_by>
+            <sys_updated_on>2020-04-23 18:03:17</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_form>
+    </sys_ui_form_sections>
+</record_update>

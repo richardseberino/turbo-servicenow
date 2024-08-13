@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_application">
+    <sys_ui_application action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <hint/>
+        <name>Turbonomic Actions</name>
+        <order/>
+        <roles>x_turbo_turbonomic.user</roles>
+        <sys_class_name>sys_ui_application</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-03-11 16:50:58</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>0392f6b6db007f005e691fe9689619b9</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Turbonomic Actions</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_ui_application_0392f6b6db007f005e691fe9689619b9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-07-31 20:42:47</sys_updated_on>
+    </sys_ui_application>
+</record_update>

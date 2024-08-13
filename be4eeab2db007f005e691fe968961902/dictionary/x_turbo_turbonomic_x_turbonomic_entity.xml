@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="98bf6a36db007f005e691fe968961989" label="Turbonomic Entity" max_length="40" name="x_turbo_turbonomic_x_turbonomic_entity" type="collection">
+        <element label="Name" max_length="200" name="name" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Related CI" max_length="32" name="sn_entity_id" reference="cmdb_ci" type="reference"/>
+        <element label="Target IP" max_length="100" name="target_ip" type="string"/>
+        <element label="Target Name" max_length="200" name="target_name" type="string"/>
+        <element label="Target Type" max_length="100" name="target_type" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Turbonomic Instance" max_length="32" name="turbonomic_instance_id" reference="x_turbo_turbonomic_turbonomic_instance" type="reference"/>
+        <element label="Type" max_length="100" name="type" type="string"/>
+        <element label="UUID" max_length="250" name="uuid" type="string"/>
+        <index name="index">
+            <element name="sn_entity_id"/>
+        </index>
+        <index name="index2">
+            <element name="turbonomic_instance_id"/>
+        </index>
+    </element>
+</database>

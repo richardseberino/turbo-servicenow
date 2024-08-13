@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_turbo_turbonomic.TurbonomicActionApproval</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>TurbonomicActionApproval</name>
+        <script><![CDATA[var TurbonomicActionApproval = (function () {
+
+    var type = 'TurbonomicActionApproval';
+    var actionOID = '';
+    var name = '';
+    var description = '';
+    var category = '';
+    var commodityName = '';
+    var from = '';
+    var to = '';
+    var risk = '';
+    var savings = '';
+    var count = 0;
+    var changedBy = '';
+    var sourceEntityId = null;
+    var targetEntityId = null;
+    var destinationEntityId = null;
+    var changeRequestId = null;
+    var stateId = null;
+    var typeId = null;
+    var timestamp = null;
+    var actionDto = null;
+    var combineWith = '';
+    var replacedByActionId = null;
+    var replacedActionId = null;
+    var isValid = 'true';
+    var sysId = null;
+
+    function TurbonomicActionApproval() {
+        this.actionOID = '';
+        this.name = '';
+        this.description = '';
+        this.category = '';
+        this.commodityName = '';
+        this.from = '';
+        this.to = '';
+        this.risk = '';
+        this.savings = '';
+        this.count = 0;
+        this.changedBy = '';
+        this.combineWith = '';
+        this.sourceEntityId = null;
+        this.targetEntityId = null;
+        this.destinationEntityId = null;
+        this.changeRequestId = null;
+        this.stateId = null;
+        this.typeId = null;
+        this.timestamp = null;
+        this.actionDto = null;
+        this.replacedByActionId = null;
+        this.replacedActionId = null;
+        this.isValid = 'true';
+        this.sysId = null;
+    }
+
+    TurbonomicActionApproval.prototype.getActionOID = function() {
+        return this.actionOID;
+    };
+
+    TurbonomicActionApproval.prototype.setActionOID = function(id) {
+        this.actionOID = id;
+    };
+
+    TurbonomicActionApproval.prototype.getName = function() {
+        return this.name;
+    };
+
+    TurbonomicActionApproval.prototype.setName = function(name) {
+        this.name = name;
+    };
+
+    TurbonomicActionApproval.prototype.getDescription = function() {
+        return this.description;
+    };
+
+    TurbonomicActionApproval.prototype.setDescription = function(description) {
+        this.description = description;
+    };
+
+    TurbonomicActionApproval.prototype.getCategory = function() {
+        return this.category;
+    };
+
+    TurbonomicActionApproval.prototype.setCategory = function(category) {
+        this.category = category;
+    };
+
+    TurbonomicActionApproval.prototype.getCommodityName = function() {
+        return this.commodityName;
+    };
+
+    TurbonomicActionApproval.prototype.setCommodityName = function(commodityName) {
+        this.commodityName = commodityName;
+    };
+
+    TurbonomicActionApproval.prototype.getFrom = function() {
+        return this.from;
+    };
+
+    TurbonomicActionApproval.prototype.setFrom = function(from) {
+        this.from = from;
+    };
+
+    TurbonomicActionApproval.prototype.getTo = function() {
+        return this.to;
+    };
+
+    TurbonomicActionApproval.prototype.setTo = function(to) {
+        this.to = to;
+    };
+
+    TurbonomicActionApproval.prototype.getRisk = function() {
+        return this.risk;
+    };
+
+    TurbonomicActionApproval.prototype.setRisk = function(risk) {
+        this.risk = risk;
+    };
+
+    TurbonomicActionApproval.prototype.getSavings = function() {
+        return this.savings;
+    };
+
+    TurbonomicActionApproval.prototype.setSavings = function(savings) {
+        this.savings = savings;
+    };
+
+    TurbonomicActionApproval.prototype.getCount = function() {
+        return this.count;
+    };
+
+    TurbonomicActionApproval.prototype.setCount = function(count) {
+        this.count = count;
+    };
+
+    TurbonomicActionApproval.prototype.getChangedBy = function() {
+        return this.changedBy;
+    };
+
+    TurbonomicActionApproval.prototype.setChangedBy = function(changedBy) {
+        this.changedBy = changedBy;
+    };
+
+    TurbonomicActionApproval.prototype.getSourceEntityId = function() {
+        return this.sourceEntityId;
+    };
+
+    TurbonomicActionApproval.prototype.setSourceEntityId = function(sourceEntityId) {
+        this.sourceEntityId = sourceEntityId;
+    };
+
+    TurbonomicActionApproval.prototype.getTargetEntityId = function() {
+        return this.targetEntityId;
+    };
+
+    TurbonomicActionApproval.prototype.setTargetEntityId = function(targetEntityId) {
+        this.targetEntityId = targetEntityId;
+    };
+
+    TurbonomicActionApproval.prototype.getDestinationEntityId = function() {
+        return this.destinationEntityId;
+    };
+
+    TurbonomicActionApproval.prototype.setDestinationEntityId = function(destinationEntityId) {
+        this.destinationEntityId = destinationEntityId;
+    };
+
+    TurbonomicActionApproval.prototype.getChangeRequestId = function() {
+        return this.changeRequestId;
+    };
+
+    TurbonomicActionApproval.prototype.setChangeRequestId = function(changeRequestId) {
+        this.changeRequestId = changeRequestId;
+    };
+
+    TurbonomicActionApproval.prototype.getStateId = function() {
+        return this.stateId;
+    };
+
+    TurbonomicActionApproval.prototype.setStateId = function(stateId) {
+        this.stateId = stateId;
+    };
+
+    TurbonomicActionApproval.prototype.getTypeId = function() {
+        return this.typeId;
+    };
+
+    TurbonomicActionApproval.prototype.setTypeId = function(typeId) {
+        this.typeId = typeId;
+    };
+
+    TurbonomicActionApproval.prototype.getTimestamp = function() {
+        return this.timestamp;
+    };
+
+    TurbonomicActionApproval.prototype.setTimestamp = function(timestamp) {
+        this.timestamp = timestamp;
+    };
+
+    TurbonomicActionApproval.prototype.getActionDTO = function() {
+        return this.actionDto;
+    };
+
+    TurbonomicActionApproval.prototype.setActionDTO = function(actionDto) {
+        this.actionDto = actionDto;
+    };
+
+    TurbonomicActionApproval.prototype.getCombineWith = function() {
+        return this.combineWith;
+    };
+
+    TurbonomicActionApproval.prototype.setCombineWith = function(combineWith) {
+        this.combineWith = combineWith;
+    };
+
+    TurbonomicActionApproval.prototype.getReplacedByActionId = function() {
+        return this.replacedByActionId;
+    };
+
+    TurbonomicActionApproval.prototype.setReplacedByActionId = function(replacedByActionId) {
+        this.replacedByActionId = replacedByActionId;
+    };
+
+    TurbonomicActionApproval.prototype.getReplacedActionId = function() {
+        return this.replacedActionId;
+    };
+
+    TurbonomicActionApproval.prototype.setReplacedActionId = function(replacedActionId) {
+        this.replacedActionId = replacedActionId;
+    };
+
+    TurbonomicActionApproval.prototype.getValid = function() {
+        return this.isValid;
+    };
+
+    TurbonomicActionApproval.prototype.setValid = function(valid) {
+        if (valid) {
+            this.isValid = 'true';
+        } else {
+            this.isValid = 'false';
+        }
+    };
+
+    TurbonomicActionApproval.prototype.getSysId = function() {
+        return this.sysId;
+    };
+
+    TurbonomicActionApproval.prototype.setSysId = function(id) {
+        this.sysId = id;
+    };
+
+    return TurbonomicActionApproval;
+}());
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-03-28 18:48:10</sys_created_on>
+        <sys_id>af59261cdb64f7400b25ebd8489619af</sys_id>
+        <sys_mod_count>15</sys_mod_count>
+        <sys_name>TurbonomicActionApproval</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_script_include_af59261cdb64f7400b25ebd8489619af</sys_update_name>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2023-11-02 20:07:06</sys_updated_on>
+    </sys_script_include>
+</record_update>

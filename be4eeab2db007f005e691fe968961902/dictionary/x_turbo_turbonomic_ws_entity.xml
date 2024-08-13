@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="395d6afedb433300373fe04a48961975" extends="sys_import_set_row" label="Turbonomic Web Service Entity" max_length="40" name="x_turbo_turbonomic_ws_entity" type="collection">
+        <element attributes="import_attribute_name=u_name,edge_encryption_enabled=true" label="Name" max_length="1000" name="u_name" type="string"/>
+        <element attributes="import_attribute_name=u_related_ci,edge_encryption_enabled=true" label="Related CI" max_length="40" name="u_related_ci" type="string"/>
+        <element attributes="import_attribute_name=u_target_ip,edge_encryption_enabled=true" label="Target IP" max_length="100" name="u_target_ip" type="string"/>
+        <element attributes="import_attribute_name=u_target_name,edge_encryption_enabled=true" label="Target Name" max_length="1000" name="u_target_name" type="string"/>
+        <element attributes="import_attribute_name=u_target_type,edge_encryption_enabled=true" label="Target Type" max_length="100" name="u_target_type" type="string"/>
+        <element attributes="import_attribute_name=u_turbonomic_instance,edge_encryption_enabled=true" label="Turbonomic Instance" max_length="40" name="u_turbonomic_instance" type="string"/>
+        <element attributes="import_attribute_name=u_type,edge_encryption_enabled=true" label="Type" max_length="100" name="u_type" type="string"/>
+        <element attributes="import_attribute_name=u_update_sys_id,edge_encryption_enabled=true" label="Update Sys Id" max_length="40" name="u_update_sys_id" type="string"/>
+        <element attributes="import_attribute_name=u_uuid,edge_encryption_enabled=true" label="UUID" max_length="1000" name="u_uuid" type="string"/>
+    </element>
+</database>

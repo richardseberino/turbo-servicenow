@@ -1,0 +1,85 @@
+Label: Turbonomic Web Service Entity
+Name: x_turbo_turbonomic_ws_entity
+Application: Turbonomic Actions
+Copy fields from target table: unchecked
+Create transform map: checked
+Target table: Turbonomic Entity
+
+Label:  Update Sys Id
+Name:   u_update_sys_id
+Length: GUID (32)
+
+Label:  Related CI
+Name:   u_related_ci
+Length: GUID (32)
+
+Label:  Target IP
+Name:   u_target_ip
+Length: Medium (100)
+
+Label:  Target Name
+Name:   u_target_name
+Length: Large (1000)
+
+Label:  Target Type
+Name:   u_target_type
+Length: Medium (100)
+
+Label:  Turbonomic Instance
+Name:   u_turbonomic_instance
+Length: GUID (32)
+
+Label:  Type
+Name:   u_type
+Length: Medium (100)
+
+Label:  UUID
+Name:   u_uuid
+Length: Large (1000)
+
+Label:  Name
+Name:   u_name
+Length: Large (1000)
+
+
+
+
+Table Transform Map
+Name: Turbonomic Web Service Entity
+Source table: Turbonomic Web Service Entity
+Active: checked
+Run business rules: checked
+Enforce mandatory fields: No
+Copy empty fields: unchecked
+Application: Turbonomic Actions
+Created: <blank>
+Target Table: Turbonomic Entity
+Order: 100
+Run script: unchecked
+
+Auto Map Matching Fields
+Source field            Target field            Coalesce
+u_turbonomic_instance   turbonomic_instance_id  false
+u_uuid                  uuid                    false
+u_target_type           target_type             false
+u_target_name           target_name             false
+u_target_ip             target_ip               false
+u_type                  type                    false
+u_name                  name                    false
+u_related_ci            sn_entity_id            false
+
+New Field Map
+    This one needs to be added manually because it requires a script.
+Use source script: checked
+Target field: Sys ID
+Coalesce: checked
+Coalesce empty fields: checked
+Source script:
+answer = (function transformEntry(source) {
+    var fieldMapUtil = new TurbonomicFieldMapUtil();
+    return fieldMapUtil.findExistingSysIdFromFieldMap('x_turbo_turbonomic_x_turbonomic_entity', source);
+})(source);
+
+Appears as the below in the field maps table of the transformation map
+Source field                  Target field                      Coalesce   Coalesce empty fields
+[Script]                      sys_id                            true       true

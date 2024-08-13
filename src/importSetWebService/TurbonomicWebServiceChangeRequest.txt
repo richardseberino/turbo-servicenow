@@ -1,0 +1,96 @@
+Label: Turbonomic Web Service Change Request
+Name: x_turbo_turbonomic_ws_change_request
+Application: Turbonomic Actions
+Copy fields from target table: unchecked
+Create transform map: checked
+Target table: Change Request
+
+
+Label:  Configuration item
+Name:   u_configuration_item
+Length: GUID (32)
+
+Label:  Short description
+Name:   u_short_description
+Length: Large (1000)
+
+Label:  Description
+Name:   u_description
+Length: Extra Large (4000)
+
+Label:  Type
+Name:   u_type
+Length: Default (40)
+
+Label:  Assigned to
+Name:   u_assigned_to
+Length: GUID (32)
+
+Label:  Assignment group
+Name:   u_assignment_group
+Length: GUID (32)
+
+Label:  Work notes
+Name:   u_work_notes
+Length: Extra Large (4000)
+
+Label:  Update Sys Id
+Name:   u_update_sys_id
+Length: GUID (32)
+
+Label:  State
+Name:   u_state
+Length: Default (40)
+
+Label:  Close code
+Name:   u_close_code
+Length: Default (40)
+
+Label:  Close notes
+Name:   u_close_notes
+Length: Extra Large (4000)
+
+
+
+Table Transform Map
+Name: Turbonomic Web Service Change Request
+Source table: Turbonomic Web Service Change Request
+Active: checked
+Run business rules: checked
+Enforce mandatory fields: No
+Copy empty fields: unchecked
+Application: Turbonomic Actions
+Created: <blank>
+Target Table: Change Request
+Order: 100
+Run script: unchecked
+
+Auto Map Matching Fields
+Source field         Target field      Coalesce
+u_assigned_to        assigned_to       false
+u_configuration_item cmdb_ci           false
+u_description        description       false
+u_type               type              false
+u_short_description  short_description false
+u_assignment_group   assignment_group  false
+u_work_notes	     work_notes        false
+u_state              state             false
+u_close_notes        close_notes       false
+u_close_code         close_code        false
+
+New Field Map
+    This one needs to be added manually because it requires a script.
+Use source script: checked
+Target field: Sys ID
+Coalesce: checked
+Coalesce empty fields: checked
+Source script:
+answer = (function transformEntry(source) {
+    var fieldMapUtil = new TurbonomicFieldMapUtil();
+    return fieldMapUtil.findExistingSysIdFromFieldMap('change_request', source);
+})(source);
+
+Appears as the below in the field maps table of the transformation map
+Source field                  Target field                      Coalesce   Coalesce empty fields
+[Script]                      sys_id                            true       true
+

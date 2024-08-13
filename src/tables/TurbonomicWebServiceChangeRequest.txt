@@ -1,0 +1,19 @@
+# Auto created when you create an import set web service.
+Label: Turbonomic Web Service Change Request
+Name: x_turbo_turbonomic_ws_change_request
+Extends table: Import Set Row
+Application: Turbonomic Actions
+
+Column label       Column name          Type    Reference  Max length
+Assigned to        u_assigned_to        String  (empty)            40
+Assignment group   u_assignment_group   String  (empty)            40
+Configuration item u_configuration_item String  (empty)            40
+Description        u_description        String  (empty)         4,000
+Short description  u_short_description  String  (empty)         1,000
+Type               u_type               String  (empty)            40
+Update Sys Id      u_update_sys_id      String  (empty)            40
+State              u_state              String  (empty)            40
+Close code         u_close_code         String  (empty)            40
+Close notes        u_close_notes        String  (empty)          4000
+Work notes         u_work_notes         String  (empty)          4000
+

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="bca78336db407f005e691fe96896195a" label="Turbonomic Action Approval" max_length="40" name="x_turbo_turbonomic_turbonomic_action_approval" type="collection">
+        <element label="Action DTO" max_length="800" name="action_dto" type="string"/>
+        <element label="Category" max_length="100" name="category" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Change Request" max_length="32" name="change_request_id" reference="change_request" type="reference"/>
+        <element label="Checksum" max_length="100" name="checksum" type="string"/>
+        <element label="Combine With" max_length="400" name="combine_with" type="string"/>
+        <element label="Metric" max_length="100" name="commodity_name" type="string"/>
+        <element attributes="edge_encryption_enabled=true" default="0" label="Count" max_length="40" name="count" type="integer"/>
+        <element label="Description" max_length="500" name="description" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Destination Entity" max_length="32" name="destination_entity_id" reference="x_turbo_turbonomic_x_turbonomic_entity" type="reference"/>
+        <element label="From" max_length="200" name="from" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Is Valid" max_length="40" name="is_valid" type="boolean"/>
+        <element label="Most Recent Execution Description" max_length="500" name="most_recent_execution_description" type="string"/>
+        <element label="Name" max_length="250" name="name" type="string"/>
+        <element display="true" label="OID" max_length="75" name="oid" type="string"/>
+        <element attributes="edge_encryption_enabled=true,encode_utf8=false" label="Replaces Action" max_length="32" name="replaced_action_id" reference="x_turbo_turbonomic_turbonomic_action_approval" type="reference"/>
+        <element attributes="edge_encryption_enabled=true,encode_utf8=false" label="Replaced By Action ID" max_length="32" name="replaced_by_action" reference="x_turbo_turbonomic_turbonomic_action_approval" type="reference"/>
+        <element label="Risk" max_length="50" name="risk" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Savings" max_length="40" name="savings" type="float"/>
+        <element attributes="edge_encryption_enabled=true" label="Source Entity" max_length="32" name="source_entity_id" reference="x_turbo_turbonomic_x_turbonomic_entity" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" label="State" max_length="32" name="state_id" reference="x_turbo_turbonomic_turbonomic_action_state" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" label="Target Entity" max_length="32" name="target_entity_id" reference="x_turbo_turbonomic_x_turbonomic_entity" type="reference"/>
+        <element label="To" max_length="200" name="to" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Turbonomic Timestamp" max_length="40" name="turbonomic_timestamp" type="glide_date_time"/>
+        <element attributes="edge_encryption_enabled=true" label="Type" max_length="32" name="type_id" reference="x_turbo_turbonomic_turbonomic_action_type" type="reference"/>
+        <index name="index">
+            <element name="change_request_id"/>
+        </index>
+        <index name="index2">
+            <element name="destination_entity_id"/>
+        </index>
+        <index name="index3">
+            <element name="oid"/>
+        </index>
+        <index name="index4">
+            <element name="replaced_action_id"/>
+        </index>
+        <index name="index5">
+            <element name="replaced_by_action"/>
+        </index>
+        <index name="index6">
+            <element name="source_entity_id"/>
+        </index>
+        <index name="index7">
+            <element name="state_id"/>
+        </index>
+        <index name="index8">
+            <element name="target_entity_id"/>
+        </index>
+        <index name="index9">
+            <element name="type_id"/>
+        </index>
+    </element>
+</database>

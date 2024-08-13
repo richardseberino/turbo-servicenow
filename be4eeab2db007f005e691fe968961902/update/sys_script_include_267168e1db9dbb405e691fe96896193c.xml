@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_turbo_turbonomic.TurbonomicChangeRequestDAO</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>TurbonomicChangeRequestDAO</name>
+        <script><![CDATA[var TurbonomicChangeRequestDAO =  (function () {
+
+    TurbonomicChangeRequestDAO.prototype.type = 'TurbonomicChangeRequestDAO';
+
+    function TurbonomicChangeRequestDAO() {
+        this._actionApprovalState = new TurbonomicActionApprovalState();
+        this._changeRequestStates = new TurbonomicChangeRequestState();
+        this._actionDAO = new TurbonomicActionDAO();
+        this._tableNames = new TurbonomicTableNames();
+    }
+
+    TurbonomicChangeRequestDAO.prototype.getChangeRequestBySysId = function(sysId) {
+        var changeRequest = new GlideRecordSecure('change_request');
+        changeRequest.addQuery('sys_id', sysId);
+        changeRequest.query();
+        if (changeRequest.next()) {
+            return changeRequest;
+        }
+
+        return null;
+    };
+
+    /**
+     * Cancels the the change requests sent in as input if they are not already in Closed state.
+     *
+     * @param changeRequestIds the list of change request IDs.
+     */
+    TurbonomicChangeRequestDAO.prototype.cancelChangeRequests = function(changeRequestIds) {
+        var closeCodeForMissedApprovals = this._actionDAO.getSettingValue('cr_close_code_for_missed_approvals');
+        var crCloseCode = this._changeRequestStates.CLOSE_CODE_UNSUCCESSFUL;
+        var crCloseMessage = "Closed as unsuccessful because Turbonomic action is no longer present.";
+
+        if (closeCodeForMissedApprovals == 'successful') {
+            crCloseCode = this._changeRequestStates.CLOSE_CODE_SUCCESSFUL;
+            crCloseMessage = "Closed as successful as per the user setting, when Turbonomic action is no longer present.";
+        }
+
+        // Go through the change request IDs marked as missed and cancel their change request
+        for (var cntr = 0; cntr < changeRequestIds.length; cntr++) {
+            var changeRequestId = changeRequestIds[cntr];
+
+            var actionApproval = new GlideRecordSecure('x_turbo_turbonomic_turbonomic_action_approval');
+            actionApproval.addQuery('change_request_id', changeRequestId);
+            actionApproval.query();
+
+            var skipChangeRequest = false;
+            while (actionApproval.next()) {
+                var actionApprovalState = this._actionDAO.getActionStateById(actionApproval.state_id);
+                switch (actionApprovalState) {
+                    case this._actionApprovalState.PENDING_APPROVAL:
+                    case this._actionApprovalState.APPROVED:
+                    case this._actionApprovalState.WAITING_FOR_EXEC:
+                    case this._actionApprovalState.WAITING_FOR_CR_SCHEDULE:
+                    case this._actionApprovalState.IN_PROGRESS:
+                        skipChangeRequest = true;
+                        break;
+                }
+                if (skipChangeRequest) {
+                    gs.debug('TurbonomicChangeRequestDAO.cancelChangeRequests() - ' +
+                            'Found valid action approval linked to change request with ID = ' + changeRequestId +
+                            '; current approval state = ' + actionApprovalState);
+                    break;
+                }
+            }
+
+            if (skipChangeRequest) {
+                    gs.debug('TurbonomicChangeRequestDAO.cancelChangeRequests() - ' +
+                            'Skip cancelling the change request with ID = ' + changeRequestId +
+                            '; The CR is linked to an action approval that is not on a final state');
+                    continue;                
+            }
+
+            var changeRequestRecord = this.getChangeRequestBySysId(changeRequestId);
+            var changeRequestState = changeRequestRecord.state.toString();
+
+            var closedChangeRequestState = this._actionDAO.getClosedChangeRequestState();
+            var canceledChangeRequestState = this._actionDAO.getCanceledChangeRequestState();
+            if (changeRequestState !== closedChangeRequestState) {
+                this._actionDAO.insertIntoImportSet(this._tableNames.CHANGE_REQUEST_IMPORT_SET,
+                    {
+                        u_update_sys_id: changeRequestId, // use the sysId to update
+                        u_state: canceledChangeRequestState,
+                        u_work_notes: "The change request was canceled since the action is no longer present.",
+                        u_close_code: crCloseCode,
+                        u_close_notes: crCloseMessage
+                    },
+                    'TurbonomicChangeRequestDAO.cancelChangeRequests() - ' +
+                        'Cancelling change request with ID = ' + changeRequestId +
+                        ' current state = ' + changeRequestRecord.state);
+
+            } else {
+                gs.debug('TurbonomicChangeRequestDAO.cancelChangeRequests() - ' +
+                        'Skipped cancelling change request with ID = ' + changeRequestId +
+                        ' current state = ' + changeRequestRecord.state);
+            }
+        }
+    };
+
+    return TurbonomicChangeRequestDAO;
+
+}());
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>josephmate</sys_created_by>
+        <sys_created_on>2019-05-08 12:23:05</sys_created_on>
+        <sys_id>267168e1db9dbb405e691fe96896193c</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>TurbonomicChangeRequestDAO</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_script_include_267168e1db9dbb405e691fe96896193c</sys_update_name>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2023-11-02 20:13:47</sys_updated_on>
+    </sys_script_include>
+</record_update>

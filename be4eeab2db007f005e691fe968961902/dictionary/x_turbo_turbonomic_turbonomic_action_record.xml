@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="78a38b32db407f005e691fe9689619cd" label="Turbonomic Action Record" max_length="40" name="x_turbo_turbonomic_turbonomic_action_record" type="collection">
+        <element label="Accepted By" max_length="200" name="accepted_by" type="string"/>
+        <element label="Action OID" max_length="75" name="action_oid" type="string"/>
+        <element attributes="edge_encryption_enabled=true" default="0" label="Count" max_length="40" name="count" type="integer"/>
+        <element label="Details" max_length="4000" name="details" type="string"/>
+        <element label="Lifecycle Stage" max_length="40" name="lifecycle_stage" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Turbonomic Entity" max_length="32" name="turbonomic_entity_id" reference="x_turbo_turbonomic_x_turbonomic_entity" type="reference"/>
+        <index name="index">
+            <element name="action_oid"/>
+        </index>
+        <index name="index2">
+            <element name="turbonomic_entity_id"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,12 @@
+# Auto created when you create an import set web service.
+Label: Turbonomic Web Service Instance
+Name: x_turbo_turbonomic_ws_instance
+Extends table: Import Set Row
+Application: Turbonomic Actions
+
+Column label        Column name         Type    Reference  Max length
+Update Sys Id       u_update_sys_id     String  (empty)            40
+Host Or IP          u_host_or_ip        String  (empty)           100
+Last Access Time    u_last_access_time  String  (empty)            40
+Status              u_status            String  (empty)           100
+Version             u_version           String  (empty)           100

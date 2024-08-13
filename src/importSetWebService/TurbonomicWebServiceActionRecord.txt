@@ -1,0 +1,72 @@
+Label: Turbonomic Web Service Action Record
+Name: x_turbo_turbonomic_ws_action_record
+Application: Turbonomic Actions
+Copy fields from target table: unchecked
+Create transform map: checked
+Target table: Turbonomic Action Record
+
+Label:  Update Sys Id
+Name:   u_update_sys_id
+Length: GUID (32)
+
+Label: Accepted By
+Name: u_accepted_by
+Length: Large (1000)
+
+Label: Action OID
+Name: u_action_oid
+Length: Default (40)
+
+Label: Count
+Name: u_count
+Length: Default(40)
+
+Label: Details
+Name: u_details
+Length: Extra Large (4000)
+
+Label: Lifecycle Stage
+Name: u_lifecycle_stage
+Length: Default (40)
+
+Label: Turbonomic Entity
+Name: u_turbonomic_entity
+Length: GUID(32)
+
+Table Transform Map
+Name: Turbonomic Web Service Action Record
+Source table: Turbonomic Web Service Action Record
+Active: checked
+Run business rules: checked
+Enforce mandatory fields: No
+Copy empty fields: unchecked
+Application: Turbonomic Actions
+Created: <blank>
+Target Table: Turbonomic Action Record
+Order: 100
+Run script: unchecked
+
+Auto Map Matching Fields
+Source field        Target field         Coalesce
+u_accepted_by       accepted_by          false
+u_turbonomic_entity turbonomic_entity_id false
+u_action_oid        action_oid           false
+u_lifecycle_stage   lifecycle_stage      false
+u_count             count                false
+u_details           details              false
+
+New Field Map
+    This one needs to be added manually because it requires a script.
+Use source script: checked
+Target field: Sys ID
+Coalesce: checked
+Coalesce empty fields: checked
+Source script:
+answer = (function transformEntry(source) {
+    var fieldMapUtil = new TurbonomicFieldMapUtil();
+    return fieldMapUtil.findExistingSysIdFromFieldMap('x_turbo_turbonomic_turbonomic_action_record', source);
+})(source);
+
+Appears as the below in the field maps table of the transformation map
+Source field                  Target field                      Coalesce   Coalesce empty fields
+[Script]                      sys_id                            true       true

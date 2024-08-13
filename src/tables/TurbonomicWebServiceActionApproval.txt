@@ -1,0 +1,30 @@
+# Auto created when you create an import set web service.
+Label: Turbonomic Web Service Action Approval
+Name: x_turbo_turbonomic_ws_action_approval
+Extends table: Import Set Row
+Application: Turbonomic Actions
+
+
+Column label                      Column name                   Type   Reference  Max length
+Update Sys Id                     u_update_sys_id               String  (empty)           40
+Action DTO                        u_action_dto                  String  (empty)       65,000
+Category                          u_category                    String  (empty)          100
+Change Request                    u_change_request              String  (empty)           40
+Count                             u_count                       String  (empty)           40
+Description                       u_description                 String  (empty)        1,000
+Destination Entity                u_destination_entity          String  (empty)           40
+From                              u_from                        String  (empty)        1,000
+Metric                            u_metric                      String  (empty)          100
+Most Recent Execution Description u_most_recent__on_description String  (empty)        1,000
+Name                              u_name                        String  (empty)        1,000
+OID                               u_oid                         String  (empty)          100
+Risk                              u_risk                        String  (empty)          100
+Savings                           u_savings                     String  (empty)           40
+Source Entity                     u_source_entity               String  (empty)           40
+State                             u_state                       String  (empty)           40
+Target Entity                     u_target_entity               String  (empty)           40
+To                                u_to                          String  (empty)        1,000
+Turbonomic Timestamp              u_turbonomic_timestamp        String  (empty)           40
+Type                              u_type                        String  (empty)           40
+Updated by                        u_updated_by                  String  (empty)           40
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="f4fc6afedb433300373fe04a4896193d" extends="sys_import_set_row" label="Turbonomic Web Service Change Request" max_length="40" name="x_turbo_turbonomic_ws_change_request" type="collection">
+        <element attributes="import_attribute_name=u_assigned_to,edge_encryption_enabled=true" label="Assigned to" max_length="40" name="u_assigned_to" type="string"/>
+        <element attributes="import_attribute_name=u_assignment_group,edge_encryption_enabled=true" label="Assignment group" max_length="40" name="u_assignment_group" type="string"/>
+        <element attributes="import_attribute_name=u_close_code,edge_encryption_enabled=true" label="Close code" max_length="40" name="u_close_code" type="string"/>
+        <element attributes="import_attribute_name=u_close_notes,edge_encryption_enabled=true" label="Close notes" max_length="4000" name="u_close_notes" type="string"/>
+        <element attributes="import_attribute_name=u_configuration_item,edge_encryption_enabled=true" label="Configuration item" max_length="40" name="u_configuration_item" type="string"/>
+        <element attributes="import_attribute_name=u_description,edge_encryption_enabled=true" label="Description" max_length="4000" name="u_description" type="string"/>
+        <element attributes="import_attribute_name=u_short_description,edge_encryption_enabled=true" label="Short description" max_length="1000" name="u_short_description" type="string"/>
+        <element attributes="import_attribute_name=u_state,edge_encryption_enabled=true" label="State" max_length="40" name="u_state" type="string"/>
+        <element attributes="import_attribute_name=u_type,edge_encryption_enabled=true" label="Type" max_length="40" name="u_type" type="string"/>
+        <element attributes="import_attribute_name=u_update_sys_id,edge_encryption_enabled=true" label="Update Sys Id" max_length="40" name="u_update_sys_id" type="string"/>
+        <element attributes="import_attribute_name=u_work_notes,edge_encryption_enabled=true" label="Work notes" max_length="4000" name="u_work_notes" type="string"/>
+    </element>
+</database>

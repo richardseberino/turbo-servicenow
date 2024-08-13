@@ -1,0 +1,65 @@
+Label: Turbonomic Web Service Instance
+Name: x_turbo_turbonomic_ws_instance
+Application: Turbonomic Actions
+Copy fields from target table: unchecked
+Create transform map: checked
+Target table: Turbonomic Instance
+
+Label:  Update Sys Id
+Name:   u_update_sys_id
+Length: GUID (32)
+
+Label:  Host Or IP
+Name:   u_host_or_ip
+Length: Medium (100)
+
+Label:  Last Access Time
+Name:   u_last_access_time
+Length: Default (40)
+
+Label:  Status
+Name:   u_status
+Length: Medium (100)
+
+Label:  Version
+Name:   u_version
+Length: Medium (100)
+
+
+
+Table Transform Map
+Name: Turbonomic Web Service Instance
+Source table: Turbonomic Web Service Instance
+Active: checked
+Run business rules: checked
+Enforce mandatory fields: No
+Copy empty fields: unchecked
+Application: Turbonomic Actions
+Created: <blank>
+Target Table: Turbonomic Instance
+Order: 100
+Run script: unchecked
+
+Auto Map Matching Fields
+Source field        Target field      Coalesce
+u_last_access_time  last_access_time  false
+u_host_or_ip        host_or_ip        false
+u_status            status            false
+u_version           version           false
+
+New Field Map
+    This one needs to be added manually because it requires a script.
+Use source script: checked
+Target field: Sys ID
+Coalesce: checked
+Coalesce empty fields: checked
+Source script:
+answer = (function transformEntry(source) {
+    var fieldMapUtil = new TurbonomicFieldMapUtil();
+    return fieldMapUtil.findExistingSysIdFromFieldMap('x_turbo_turbonomic_turbonomic_instance', source);
+})(source);
+
+Appears as the below in the field maps table of the transformation map
+Source field                  Target field                      Coalesce   Coalesce empty fields
+[Script]                      sys_id                            true       true
+

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_turbo_turbonomic.TurbonomicTableNames</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>TurbonomicTableNames</name>
+        <script><![CDATA[var TurbonomicTableNames =  (function () {
+
+    TurbonomicTableNames.prototype.type = 'TurbonomicTableNames';
+
+    function TurbonomicTableNames() {
+    }
+
+    /**
+     * These are the Import Set Tables.
+     */
+    TurbonomicTableNames.prototype.ACTION_APPROVAL_IMPORT_SET = 'x_turbo_turbonomic_ws_action_approval';
+    TurbonomicTableNames.prototype.ACTION_RECORD_IMPORT_SET = 'x_turbo_turbonomic_ws_action_record';
+    TurbonomicTableNames.prototype.CHANGE_REQUEST_IMPORT_SET = 'x_turbo_turbonomic_ws_change_request';
+    TurbonomicTableNames.prototype.ENTITY_IMPORT_SET = 'x_turbo_turbonomic_ws_entity';
+    TurbonomicTableNames.prototype.INSTANCE_IMPORT_SET = 'x_turbo_turbonomic_ws_instance';
+
+    /**
+     * These are the ServiceNow Tables we use.
+     */
+    TurbonomicTableNames.prototype.CHANGE_REQUEST = 'change_request';
+
+    return TurbonomicTableNames;
+
+}());
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-08-09 20:46:51</sys_created_on>
+        <sys_id>40a05567db033300373fe04a489619da</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>TurbonomicTableNames</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_script_include_40a05567db033300373fe04a489619da</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-08-09 20:46:51</sys_updated_on>
+    </sys_script_include>
+</record_update>

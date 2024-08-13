@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_turbo_turbonomic.TurbonomicEntity</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>TurbonomicEntity</name>
+        <script><![CDATA[var TurbonomicEntity = (function () {
+
+    var type = 'TurbonomicEntity';
+    var guid = '';
+    var uuid = '';
+    var entityName = '';
+    var entityType = '';
+    var targetName = '';
+    var targetType = '';
+    var targetIp = '';
+    var configItemId = null;
+    var turbonomicInstanceId = null;
+
+    function TurbonomicEntity() {
+        this.guid = '';
+        this.uuid = '';
+        this.entityName = '';
+        this.entityType = '';
+        this.targetName = '';
+        this.targetType = '';
+        this.targetIp = '';
+        this.configItemId = null;
+        this.turbonomicInstanceId = null;
+    }
+
+    TurbonomicEntity.prototype.getGuid = function() {
+        return this.guid;
+    };
+
+    TurbonomicEntity.prototype.setGuid = function(guid) {
+        this.guid = guid;
+    };
+
+    TurbonomicEntity.prototype.getUuid = function() {
+        return this.uuid;
+    };
+
+    TurbonomicEntity.prototype.setUuid = function(uuid) {
+        this.uuid = uuid;
+    };
+
+    TurbonomicEntity.prototype.getEntityName = function() {
+        return this.entityName;
+    };
+
+    TurbonomicEntity.prototype.setEntityName = function(name) {
+        this.entityName = name;
+    };
+
+    TurbonomicEntity.prototype.getEntityType = function() {
+        return this.entityType;
+    };
+
+    TurbonomicEntity.prototype.setEntityType = function(type) {
+        this.entityType = type;
+    };
+
+    TurbonomicEntity.prototype.getTargetName = function() {
+        return this.targetName;
+    };
+
+    TurbonomicEntity.prototype.setTargetName = function(targetName) {
+        this.targetName = targetName;
+    };
+
+    TurbonomicEntity.prototype.getTargetType = function() {
+        return this.targetType;
+    };
+
+    TurbonomicEntity.prototype.setTargetType = function(targetType) {
+        this.targetType = targetType;
+    };
+
+    TurbonomicEntity.prototype.getTargetIP = function() {
+        return this.targetIp;
+    };
+
+    TurbonomicEntity.prototype.setTargetIP = function(targetIp) {
+        this.targetIp = targetIp;
+    };
+
+    TurbonomicEntity.prototype.getConfigItemId = function() {
+        return this.configItemId;
+    };
+
+    TurbonomicEntity.prototype.setConfigItemId = function(id) {
+        this.configItemId = id;
+    };
+
+    TurbonomicEntity.prototype.getTurbonomicInstanceId = function() {
+        return this.turbonomicInstanceId;
+    };
+
+    TurbonomicEntity.prototype.setTurbonomicInstanceId = function(id) {
+        this.turbonomicInstanceId = id;
+    };
+
+    return TurbonomicEntity;
+}());
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-03-13 18:20:34</sys_created_on>
+        <sys_id>c505116fdb84bf005e691fe968961993</sys_id>
+        <sys_mod_count>19</sys_mod_count>
+        <sys_name>TurbonomicEntity</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_script_include_c505116fdb84bf005e691fe968961993</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-08-06 17:57:15</sys_updated_on>
+    </sys_script_include>
+</record_update>

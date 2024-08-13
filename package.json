@@ -1,0 +1,22 @@
+{
+    "name": "ServiceNowTurbonomicActions",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./dist/index",
+    "types": "./dist/index",
+    "scripts": {
+        "dev": "tsc --watch & nodemon dist"
+    },
+    "author": "Gh111",
+    "license": "ISC",
+    "devDependencies": {
+        "jasmine-core": "^3.3.0",
+        "karma": "^4.0.1",
+        "karma-chrome-launcher": "^2.2.0",
+        "karma-jasmine": "^2.0.1",
+        "yourdevDependencies": "^1.0.0"
+    },
+    "dependencies": {
+        "typescript": "^3.4.1"
+    }
+}

@@ -1,0 +1,16 @@
+# Auto created when you create an import set web service.
+Label: Turbonomic Web Service Entity
+Name: x_turbo_turbonomic_ws_entity
+Extends table: Import Set Row
+Application: Turbonomic Actions
+
+Column label        Column name           Type    Reference Max length
+Update Sys Id       u_update_sys_id       String  (empty)           40
+Name                u_name                String  (empty)           40
+Related CI          u_related_ci          String  (empty)           40
+Target IP           u_target_ip           String  (empty)          100
+Target Name         u_target_name         String  (empty)        1,000
+Target Type         u_target_type         String  (empty)          100
+Turbonomic Instance u_turbonomic_instance String  (empty)           40
+Type                u_type                String  (empty)          100
+UUID                u_uuid                String  (empty)        1,000

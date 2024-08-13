@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="029faa72db833300373fe04a489619ce" extends="sys_import_set_row" label="Turbonomic Web Service Instance" max_length="40" name="x_turbo_turbonomic_ws_instance" type="collection">
+        <element attributes="import_attribute_name=u_host_or_ip,edge_encryption_enabled=true" label="Host Or IP" max_length="100" name="u_host_or_ip" type="string"/>
+        <element attributes="import_attribute_name=u_last_access_time,edge_encryption_enabled=true" label="Last Access Time" max_length="40" name="u_last_access_time" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=u_mac_address" label="MAC Address" max_length="100" name="u_mac_address" type="string"/>
+        <element attributes="import_attribute_name=u_status,edge_encryption_enabled=true" label="Status" max_length="100" name="u_status" type="string"/>
+        <element attributes="import_attribute_name=u_update_sys_id,edge_encryption_enabled=true" label="Update Sys Id" max_length="40" name="u_update_sys_id" type="string"/>
+        <element attributes="import_attribute_name=u_version,edge_encryption_enabled=true" label="Version" max_length="100" name="u_version" type="string"/>
+    </element>
+</database>

@@ -1,0 +1,12 @@
+# Auto created when you create an import set web service.
+Label: Turbonomic Web Service Action Record
+Name: x_turbo_turbonomic_ws_action_record
+Extends table: Import Set Row
+Application: Turbonomic Actions
+
+Accepted By       u_accepted_by        String (empty) 1,000 false
+Action OID        u_action_oid         String (empty)    40 false
+Count             u_count              String (empty)    40 false
+Details           u_details            String (empty) 4,000 false
+Lifecycle Stage   u_lifecycle_stage    String (empty)    40 false
+Turbonomic Entity u_turbonomic_entity  String (empty)    40 false

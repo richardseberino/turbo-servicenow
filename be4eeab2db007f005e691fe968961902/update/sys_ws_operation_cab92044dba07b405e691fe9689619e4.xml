@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json,application/xml,text/xml</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri>/api/x_turbo_turbonomic/action/approvals</default_operation_uri>
+        <enforce_acl>40d4c12edb033300373fe04a48961986</enforce_acl>
+        <http_method>PUT</http_method>
+        <name>Update Action Approvals</name>
+        <operation_script><![CDATA[/**
+ * Update Turbonomic Action Approvals existing in ServiceNow.
+ *
+ * @param request The details including URI path parameters, query parameters, headers, and the request body.
+ * @param response Configure the response including setting the HTTP status code, response body, and any response headers.
+ */
+(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+    gs.debug('Processing Update Turbonomic Action Approvals API call...');
+    var requestProcessor = new x_turbo_turbonomic.TurbonomicRequestProcessor();
+    return requestProcessor.updateActionApprovals(request.body.data);
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_turbo_turbonomic/v1/action/approvals</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/approvals</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-03-27 14:21:24</sys_created_on>
+        <sys_id>cab92044dba07b405e691fe9689619e4</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>Update Action Approvals</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_ws_operation_cab92044dba07b405e691fe9689619e4</sys_update_name>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2020-04-30 19:29:52</sys_updated_on>
+        <web_service_definition display_value="Turbonomic Action API">9709e804dba07b405e691fe9689619c0</web_service_definition>
+        <web_service_version display_value="v1">c9651cf2db213300373fe04a489619d0</web_service_version>
+    </sys_ws_operation>
+</record_update>

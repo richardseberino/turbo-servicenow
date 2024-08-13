@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="4f0be2bedb433300373fe04a48961932" extends="sys_import_set_row" label="Turbonomic Web Service Action Approval" max_length="40" name="x_turbo_turbonomic_ws_action_approval" type="collection">
+        <element attributes="import_attribute_name=u_action_dto,edge_encryption_enabled=true" label="Action DTO" max_length="65000" name="u_action_dto" type="string"/>
+        <element attributes="import_attribute_name=u_category,edge_encryption_enabled=true" label="Category" max_length="100" name="u_category" type="string"/>
+        <element attributes="import_attribute_name=u_change_request,edge_encryption_enabled=true" label="Change Request" max_length="40" name="u_change_request" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=u_checksum" label="Checksum" max_length="40" name="u_checksum" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=u_combine_with" label="Combine With" max_length="100" name="u_combine_with" type="string"/>
+        <element attributes="import_attribute_name=u_count,edge_encryption_enabled=true" label="Count" max_length="40" name="u_count" type="string"/>
+        <element attributes="import_attribute_name=u_description,edge_encryption_enabled=true" label="Description" max_length="1000" name="u_description" type="string"/>
+        <element attributes="import_attribute_name=u_destination_entity,edge_encryption_enabled=true" label="Destination Entity" max_length="40" name="u_destination_entity" type="string"/>
+        <element attributes="import_attribute_name=u_from,edge_encryption_enabled=true" label="From" max_length="1000" name="u_from" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=u_is_valid" label="Is Valid" max_length="40" name="u_is_valid" type="string"/>
+        <element attributes="import_attribute_name=u_metric,edge_encryption_enabled=true" label="Metric" max_length="100" name="u_metric" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=u_most_recent_on_description" label="Most Recent Execution Description" max_length="1000" name="u_most_recent_on_description" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=u_most_recent_execution_description" label="Most Recent Execution Description" max_length="1000" name="u_most_recent__on_description" type="string"/>
+        <element attributes="import_attribute_name=u_name,edge_encryption_enabled=true" label="Name" max_length="1000" name="u_name" type="string"/>
+        <element attributes="import_attribute_name=u_oid,edge_encryption_enabled=true" label="OID" max_length="100" name="u_oid" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=u_replaced_action_id" label="Replaced Action ID" max_length="40" name="u_replaced_action_id" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=u_replaced_by_action" label="Replaced By Action ID" max_length="40" name="u_replaced_by_action" type="string"/>
+        <element attributes="import_attribute_name=u_risk,edge_encryption_enabled=true" label="Risk" max_length="100" name="u_risk" type="string"/>
+        <element attributes="import_attribute_name=u_savings,edge_encryption_enabled=true" label="Savings" max_length="40" name="u_savings" type="string"/>
+        <element attributes="import_attribute_name=u__source_entity,edge_encryption_enabled=true" label="Source Entity" max_length="40" name="u_source_entity" type="string"/>
+        <element attributes="import_attribute_name=u_state,edge_encryption_enabled=true" label="State" max_length="40" name="u_state" type="string"/>
+        <element attributes="import_attribute_name=u_target_entity,edge_encryption_enabled=true" label="Target Entity" max_length="40" name="u_target_entity" type="string"/>
+        <element attributes="import_attribute_name=u_to,edge_encryption_enabled=true" label="To" max_length="1000" name="u_to" type="string"/>
+        <element attributes="import_attribute_name=u_turbonomic_timestamp,edge_encryption_enabled=true" label="Turbonomic Timestamp" max_length="40" name="u_turbonomic_timestamp" type="string"/>
+        <element attributes="import_attribute_name=u_type,edge_encryption_enabled=true" label="Type" max_length="40" name="u_type" type="string"/>
+        <element attributes="import_attribute_name=u_updated_by,edge_encryption_enabled=true" label="Updated by" max_length="40" name="u_updated_by" type="string"/>
+        <element attributes="import_attribute_name=u_update_sys_id,edge_encryption_enabled=true" label="Update Sys Id" max_length="40" name="u_update_sys_id" type="string"/>
+    </element>
+</database>

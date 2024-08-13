@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_package_dependency_m2m">
+    <sys_package_dependency_m2m action="INSERT_OR_UPDATE">
+        <dependency display_value="System Import Sets" source="com.glide.system_import_set">867173c31b2231108cab4005bd4bcbd7</dependency>
+        <min_version>1.0.0</min_version>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-07-26 18:50:56</sys_created_on>
+        <sys_id>e20571881b46c290e709ca661a4bcbf7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2019-07-26 18:50:56</sys_updated_on>
+    </sys_package_dependency_m2m>
+</record_update>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_list parent="" relationship="" sys_domain="global" table="x_turbo_turbonomic_turbonomic_action_approval" version="2" view="">
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>description</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>0</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>81b6be771b62a110f1d4fc451a4bcb46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>category</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>1</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>05b6be771b62a110f1d4fc451a4bcb46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>change_request_id</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>2</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>85b6be771b62a110f1d4fc451a4bcb46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>target_entity_id</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>3</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>09b6be771b62a110f1d4fc451a4bcb46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>state_id</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>4</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>89b6be771b62a110f1d4fc451a4bcb46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>commodity_name</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>5</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>0db6be771b62a110f1d4fc451a4bcb46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>from</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>6</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>8db6be771b62a110f1d4fc451a4bcb46</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>to</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>7</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>01b6be771b62a110f1d4fc451a4bcb47</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>risk</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>8</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>81b6be771b62a110f1d4fc451a4bcb47</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>count</element>
+            <list_id display_value="x_turbo_turbonomic_turbonomic_action_approval" element="NULL" name="x_turbo_turbonomic_turbonomic_action_approval" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae5d2c991b022910f1d4fc451a4bcb28</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>9</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_id>05b6be771b62a110f1d4fc451a4bcb47</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element/>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <name>x_turbo_turbonomic_turbonomic_action_approval</name>
+            <parent/>
+            <position/>
+            <relationship/>
+            <sum>false</sum>
+            <sys_class_name>sys_ui_list</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2023-05-08 23:37:49</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>ae5d2c991b022910f1d4fc451a4bcb28</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_turbo_turbonomic_turbonomic_action_approval</sys_name>
+            <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+            <sys_update_name>sys_ui_list_x_turbo_turbonomic_turbonomic_action_approval_null</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2023-05-08 23:37:49</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_list>
+    </sys_ui_list>
+</record_update>

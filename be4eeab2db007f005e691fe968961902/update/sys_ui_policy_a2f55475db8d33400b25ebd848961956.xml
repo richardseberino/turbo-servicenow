@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_policy">
+    <sys_ui_policy action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <conditions table="x_turbo_turbonomic_turbonomic_settings">populate_assignee=true^EQ<item endquery="false" field="populate_assignee" goto="false" newquery="false" operator="=" or="false" value="true"/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </conditions>
+        <description/>
+        <global>true</global>
+        <inherit>false</inherit>
+        <isolate_script>true</isolate_script>
+        <model_id/>
+        <model_table/>
+        <on_load>true</on_load>
+        <order>100</order>
+        <reverse_if_false>true</reverse_if_false>
+        <run_scripts>true</run_scripts>
+        <script_false><![CDATA[function onCondition() {
+    g_form.setDisabled("assigned_user", true);
+    g_form.setDisabled("assigned_group", true);
+}]]></script_false>
+        <script_true><![CDATA[function onCondition() {
+    g_form.setDisabled("assigned_user", false);
+    g_form.setDisabled("assigned_group", false);
+}]]></script_true>
+        <set_values/>
+        <short_description>Enable CR Group/User only when "Populate CR Assignee" check-box is on</short_description>
+        <sys_class_name>sys_ui_policy</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-04-26 19:59:49</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>a2f55475db8d33400b25ebd848961956</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Enable CR Group/User only when "Populate CR Assignee" check-box is on</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_ui_policy_a2f55475db8d33400b25ebd848961956</sys_update_name>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2019-04-26 20:08:38</sys_updated_on>
+        <table>x_turbo_turbonomic_turbonomic_settings</table>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_ui_policy>
+</record_update>

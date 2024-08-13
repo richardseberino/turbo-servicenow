@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="update_synch=true" db_object_id="f99587b2db407f005e691fe968961916" extends="sys_metadata" label="Turbonomic Action Settings" max_length="40" name="x_turbo_turbonomic_turbonomic_settings" type="collection">
+        <element attributes="edge_encryption_enabled=true" default="86400" label="Action Execution Recovery Time" max_length="40" name="action_execution_recovery_time" type="integer"/>
+        <element attributes="edge_encryption_enabled=true" default="50" label="Action Processing Wait Time (msec)" max_length="40" name="action_processing_wait_time" type="integer"/>
+        <element attributes="edge_encryption_enabled=true" default="86400" label="Action Retention Time" max_length="40" name="action_retention_time" type="integer"/>
+        <element attributes="edge_encryption_enabled=true" default="true" label="Allow Previously Rejected Actions" max_length="40" name="allow_previously_rejected_actions" type="boolean"/>
+        <element default="v1" label="API Version" max_length="40" name="api_version" read_only="true" type="string"/>
+        <element label="Application Internal Version" max_length="40" name="application_internal_version" type="string"/>
+        <element default="-2" label="Approved CR State" max_length="40" name="approved_cr_state" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Assigned CR Group" max_length="32" name="assigned_group" reference="sys_user_group" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" label="Assigned CR User" max_length="32" name="assigned_user" reference="sys_user" type="reference"/>
+        <element default="object_id" label="Aws VM Table Column" max_length="40" name="aws_vm_table_column" type="string"/>
+        <element attributes="base_start=true,base_table=cmdb_ci,edge_encryption_enabled=true,no_truncate=true" default="cmdb_ci_vm_instance" label="Aws VM Table Name" max_length="80" name="aws_vm_table_name" type="table_name"/>
+        <element default="vm_inst_id" label="Azure VM Table Column" max_length="40" name="azure_vm_table_column" type="string"/>
+        <element attributes="base_start=true,base_table=cmdb_ci,edge_encryption_enabled=true,no_truncate=true" default="cmdb_ci_vm_instance" label="Azure VM Table Name" max_length="80" name="azure_vm_table_name" type="table_name"/>
+        <element default="4" label="Canceled CR State" max_length="40" name="canceled_cr_state" type="string"/>
+        <element default="3" label="Closed CR State" max_length="40" name="closed_cr_state" type="string"/>
+        <element attributes="edge_encryption_enabled=true" default="true" label="Allow Combined Actions" max_length="40" name="combine_actions_allowed" type="boolean"/>
+        <element choice="3" default="unsuccessful" label="CR Close Code For Missed Approvals" max_length="40" name="cr_close_code_for_missed_approvals" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Successful" value="successful"/>
+                <element inactive_on_update="false" label="Unsuccessful" value="unsuccessful"/>
+            </choice>
+        </element>
+        <element attributes="edge_encryption_enabled=true" label="Use Custom Business Rules for CR Management" max_length="40" name="disable_change_request" type="boolean"/>
+        <element default="object_id" label="Hyper-V VM Table Column" max_length="40" name="hyper_v_vm_table_column" type="string"/>
+        <element attributes="base_start=true,base_table=cmdb_ci,edge_encryption_enabled=true,no_truncate=true" default="cmdb_ci_hyper_v_instance" label="Hyper-V VM Table Name" max_length="80" name="hyper_v_vm_table_name" type="table_name"/>
+        <element default="-1" label="Implement CR State" max_length="40" name="implement_cr_state" type="string"/>
+        <element choice="3" default="normal" label="Matching CR Type" mandatory="true" max_length="100" name="matching_cr_type" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Normal" sequence="0" value="normal"/>
+                <element inactive_on_update="false" label="Emergency" sequence="1" value="emergency"/>
+                <element inactive_on_update="false" label="Standard" sequence="2" value="standard"/>
+            </choice>
+        </element>
+        <element attributes="edge_encryption_enabled=true" label="Populate CR Assignee" max_length="40" name="populate_assignee" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" default="true" label="Replaced Actions Allowed" max_length="40" name="replaced_actions_allowed" type="boolean"/>
+        <element label="Turbonomic Host Name" max_length="200" name="turbonomic_host_name" type="string"/>
+        <element default="object_id" label="vCenter VM Table Column" max_length="40" name="vcenter_vm_table_column" type="string"/>
+        <element attributes="base_start=true,base_table=cmdb_ci,edge_encryption_enabled=true,no_truncate=true" default="cmdb_ci_vmware_instance" label="vCenter VM Table Name" max_length="80" name="vcenter_vm_table_name" type="table_name"/>
+        <index name="index">
+            <element name="assigned_group"/>
+        </index>
+        <index name="index2">
+            <element name="assigned_user"/>
+        </index>
+    </element>
+</database>

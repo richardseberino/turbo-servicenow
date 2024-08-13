@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_list parent="" relationship="" sys_domain="global" table="x_turbo_turbonomic_x_turbonomic_entity" version="2" view="sys_ref_list">
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>name</element>
+            <list_id display_value="x_turbo_turbonomic_x_turbonomic_entity" element="NULL" name="x_turbo_turbonomic_x_turbonomic_entity" parent="NULL" relationship="NULL" sys_domain="global" view="dc9037431b2231108cab4005bd4bcb0e">996157badb407f005e691fe9689619fd</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>0</position>
+            <sum>false</sum>
+            <sys_created_by>alexpetrean</sys_created_by>
+            <sys_created_on>2019-03-11 19:05:28</sys_created_on>
+            <sys_id>d16157badb407f005e691fe9689619fe</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>alexpetrean</sys_updated_by>
+            <sys_updated_on>2019-03-11 19:05:28</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element/>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <name>x_turbo_turbonomic_x_turbonomic_entity</name>
+            <parent/>
+            <position/>
+            <relationship/>
+            <sum>false</sum>
+            <sys_class_name>sys_ui_list</sys_class_name>
+            <sys_created_by>alexpetrean</sys_created_by>
+            <sys_created_on>2019-03-11 19:05:28</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>996157badb407f005e691fe9689619fd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_turbo_turbonomic_x_turbonomic_entity</sys_name>
+            <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+            <sys_update_name>sys_ui_list_x_turbo_turbonomic_x_turbonomic_entity_sys_ref_list</sys_update_name>
+            <sys_updated_by>alexpetrean</sys_updated_by>
+            <sys_updated_on>2019-03-11 19:05:28</sys_updated_on>
+            <sys_user/>
+            <view display_value="Reference List" name="sys_ref_list">dc9037431b2231108cab4005bd4bcb0e</view>
+            <view_name/>
+        </sys_ui_list>
+    </sys_ui_list>
+</record_update>

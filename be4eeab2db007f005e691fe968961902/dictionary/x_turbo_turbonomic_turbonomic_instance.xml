@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="31a6b67adb007f005e691fe9689619dc" label="Turbonomic Instance" max_length="40" name="x_turbo_turbonomic_turbonomic_instance" type="collection">
+        <element display="true" label="Host Or IP" max_length="100" name="host_or_ip" read_only="true" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Last Access Time" max_length="40" name="last_access_time" type="glide_date_time"/>
+        <element label="MAC Address" max_length="100" name="mac_address" type="string"/>
+        <element label="Status" max_length="100" name="status" type="string"/>
+        <element label="Version" max_length="50" name="version" type="string"/>
+    </element>
+</database>

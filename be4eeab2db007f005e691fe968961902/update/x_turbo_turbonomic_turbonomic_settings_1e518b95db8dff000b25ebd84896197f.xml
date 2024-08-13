@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="x_turbo_turbonomic_turbonomic_settings">
+    <x_turbo_turbonomic_turbonomic_settings action="INSERT_OR_UPDATE">
+        <action_execution_recovery_time>86400</action_execution_recovery_time>
+        <action_processing_wait_time>50</action_processing_wait_time>
+        <action_retention_time>86400</action_retention_time>
+        <allow_previously_rejected_actions>true</allow_previously_rejected_actions>
+        <api_version>v1</api_version>
+        <application_internal_version>2ce4215bceb2434162f31dc854f64757bff301f8</application_internal_version>
+        <approved_cr_state>-2</approved_cr_state>
+        <assigned_group/>
+        <assigned_user/>
+        <aws_vm_table_column>object_id</aws_vm_table_column>
+        <aws_vm_table_name>cmdb_ci_vm_instance</aws_vm_table_name>
+        <azure_vm_table_column>vm_inst_id</azure_vm_table_column>
+        <azure_vm_table_name>cmdb_ci_vm_instance</azure_vm_table_name>
+        <canceled_cr_state>4</canceled_cr_state>
+        <closed_cr_state>3</closed_cr_state>
+        <combine_actions_allowed>false</combine_actions_allowed>
+        <cr_close_code_for_missed_approvals>unsuccessful</cr_close_code_for_missed_approvals>
+        <disable_change_request>false</disable_change_request>
+        <hyper_v_vm_table_column>object_id</hyper_v_vm_table_column>
+        <hyper_v_vm_table_name>cmdb_ci_hyper_v_instance</hyper_v_vm_table_name>
+        <implement_cr_state>-1</implement_cr_state>
+        <matching_cr_type>normal</matching_cr_type>
+        <populate_assignee>false</populate_assignee>
+        <replaced_actions_allowed>true</replaced_actions_allowed>
+        <sys_class_name>x_turbo_turbonomic_turbonomic_settings</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-04-25 19:07:55</sys_created_on>
+        <sys_id>1e518b95db8dff000b25ebd84896197f</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>x_turbo_turbonomic_turbonomic_settings_1e518b95db8dff000b25ebd84896197f</sys_update_name>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2023-11-02 23:04:16</sys_updated_on>
+        <turbonomic_host_name/>
+        <vcenter_vm_table_column>object_id</vcenter_vm_table_column>
+        <vcenter_vm_table_name>cmdb_ci_vmware_instance</vcenter_vm_table_name>
+    </x_turbo_turbonomic_turbonomic_settings>
+</record_update>

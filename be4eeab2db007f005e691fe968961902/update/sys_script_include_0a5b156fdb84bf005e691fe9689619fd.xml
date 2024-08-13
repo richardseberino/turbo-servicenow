@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_turbo_turbonomic.TurbonomicInstance</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>TurbonomicInstance</name>
+        <script><![CDATA[var TurbonomicInstance = (function () {
+
+    var type = 'TurbonomicInstance';
+    var guid = '';
+    var hostOrIp = '';
+    var status = '';
+    var version = '';
+    var lastAccessTime = null;
+    var macAddress = '';
+
+    function TurbonomicInstance() {
+        this.guid = '';
+        this.hostOrIp = '';
+        this.status = '';
+        this.version = '';
+        this.lastAccessTime = null;
+        this.macAddress = '';
+    }
+
+    TurbonomicInstance.prototype.getGuid = function() {
+        return this.guid;
+    };
+
+    TurbonomicInstance.prototype.setGuid = function(guid) {
+        this.guid = guid;
+    };
+
+    TurbonomicInstance.prototype.getHostOrIp = function() {
+        return this.hostOrIp;
+    };
+
+    TurbonomicInstance.prototype.setHostOrIp = function(hostOrIp) {
+        this.hostOrIp = hostOrIp;
+    };
+
+    TurbonomicInstance.prototype.getStatus = function() {
+        return this.status;
+    };
+
+    TurbonomicInstance.prototype.setStatus = function(status) {
+        this.status = status;
+    };
+
+    TurbonomicInstance.prototype.getVersion = function() {
+        return this.version;
+    };
+
+    TurbonomicInstance.prototype.setVersion = function(version) {
+        this.version = version;
+    };
+
+    TurbonomicInstance.prototype.getLastAccessTime = function() {
+        return this.lastAccessTime;
+    };
+
+    TurbonomicInstance.prototype.setLastAccessTime = function(lastAccessTime) {
+        this.lastAccessTime = lastAccessTime;
+    };
+
+    TurbonomicInstance.prototype.getMacAddress = function() {
+        return this.macAddress;
+    };
+
+    TurbonomicInstance.prototype.setMacAddress = function(macAddress) {
+        this.macAddress = macAddress;
+    };
+
+    return TurbonomicInstance;
+}());
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-03-13 18:29:50</sys_created_on>
+        <sys_id>0a5b156fdb84bf005e691fe9689619fd</sys_id>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_name>TurbonomicInstance</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_script_include_0a5b156fdb84bf005e691fe9689619fd</sys_update_name>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2020-07-16 22:21:02</sys_updated_on>
+    </sys_script_include>
+</record_update>

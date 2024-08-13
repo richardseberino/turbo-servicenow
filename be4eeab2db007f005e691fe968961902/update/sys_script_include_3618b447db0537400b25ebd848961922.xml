@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_turbo_turbonomic.TurbonomicChangeRequest</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>TurbonomicChangeRequest</name>
+        <script><![CDATA[var TurbonomicChangeRequest = (function () {
+
+    var type = 'TurbonomicChangeRequest';
+    var id = '';
+    var number = '';
+    var state = '';
+    var description = '';
+    var shortDescription = '';
+
+    function TurbonomicChangeRequest() {
+        this.id = '';
+        this.number = '';
+        this.state = '';
+        this.description = '';
+        this.shortDescription = '';
+    }
+
+    TurbonomicChangeRequest.prototype.getId = function() {
+        return this.id;
+    };
+
+    TurbonomicChangeRequest.prototype.setId = function(id) {
+        this.id = id;
+    };
+
+    TurbonomicChangeRequest.prototype.getNumber = function() {
+        return this.number;
+    };
+
+    TurbonomicChangeRequest.prototype.setNumber = function(number) {
+        this.number = number;
+    };
+
+    TurbonomicChangeRequest.prototype.getState = function() {
+        return this.state;
+    };
+
+    TurbonomicChangeRequest.prototype.setState = function(state) {
+        this.state = state;
+    };
+
+    TurbonomicChangeRequest.prototype.getDescription = function() {
+        return this.description;
+    };
+
+    TurbonomicChangeRequest.prototype.setDescription = function(description) {
+        this.description = description;
+    };
+
+    TurbonomicChangeRequest.prototype.getShortDescription = function() {
+        return this.shortDescription;
+    };
+
+    TurbonomicChangeRequest.prototype.setShortDescription = function(shortDescription) {
+        this.shortDescription = shortDescription;
+    };
+
+    return TurbonomicChangeRequest;
+}());
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-04-30 19:41:10</sys_created_on>
+        <sys_id>3618b447db0537400b25ebd848961922</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>TurbonomicChangeRequest</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_script_include_3618b447db0537400b25ebd848961922</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-03-02 23:34:07</sys_updated_on>
+    </sys_script_include>
+</record_update>

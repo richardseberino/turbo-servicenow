@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="x_turbo_turbonomic_turbonomic_action_type">
+    <x_turbo_turbonomic_turbonomic_action_type action="INSERT_OR_UPDATE">
+        <description>Resize for efficiency action type</description>
+        <name>RESIZE_FOR_EFFICIENCY</name>
+        <sys_class_name>x_turbo_turbonomic_turbonomic_action_type</sys_class_name>
+        <sys_created_by>alexpetrean</sys_created_by>
+        <sys_created_on>2019-03-27 21:27:29</sys_created_on>
+        <sys_id>eb3b0e88dbe8b7400b25ebd84896191e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>RESIZE_FOR_EFFICIENCY</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>x_turbo_turbonomic_turbonomic_action_type_eb3b0e88dbe8b7400b25ebd84896191e</sys_update_name>
+        <sys_updated_by>alexpetrean</sys_updated_by>
+        <sys_updated_on>2019-03-27 21:27:29</sys_updated_on>
+    </x_turbo_turbonomic_turbonomic_action_type>
+</record_update>

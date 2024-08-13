@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_index">
+    <sys_index action="INSERT_OR_UPDATE">
+        <col_name_string>oid</col_name_string>
+        <index_col_name element="oid" name="x_turbo_turbonomic_turbonomic_action_approval">6c388ff2db407f005e691fe9689619b8</index_col_name>
+        <logical_table_name>x_turbo_turbonomic_turbonomic_action_approval</logical_table_name>
+        <sys_class_name>sys_index</sys_class_name>
+        <sys_created_by>system</sys_created_by>
+        <sys_created_on>2019-04-25 20:55:57</sys_created_on>
+        <sys_id>6a3a1b15db0133400b25ebd848961951</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_turbo_turbonomic_turbonomic_action_approval</sys_name>
+        <sys_package display_value="Turbonomic Actions" source="x_turbo_turbonomic">be4eeab2db007f005e691fe968961902</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Turbonomic Actions">be4eeab2db007f005e691fe968961902</sys_scope>
+        <sys_update_name>sys_index_x_turbo_turbonomic_turbonomic_action_approval_oid</sys_update_name>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2019-04-25 20:55:57</sys_updated_on>
+        <table display_value="Turbonomic Action Approval" name="x_turbo_turbonomic_turbonomic_action_approval">bca78336db407f005e691fe96896195a</table>
+        <unique_index>false</unique_index>
+    </sys_index>
+</record_update>
